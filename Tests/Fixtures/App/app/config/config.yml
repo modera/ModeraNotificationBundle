@@ -1,0 +1,35 @@
+framework:
+    secret:          Hell yeah!
+    router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+    csrf_protection: true
+    session:         ~
+    templating:
+        engines: ['twig']
+
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     mysql #127.0.0.1
+        port:     3306
+        dbname:   modera_notificationsbundle
+        user:     root
+        password: 123123
+        charset:  UTF8
+
+    orm:
+        resolve_target_entities:
+            Symfony\Component\Security\Core\User\UserInterface: Modera\NotificationBundle\Tests\Fixtures\Entity\User
+
+        auto_generate_proxy_classes: true
+        auto_mapping: true
+        mappings:
+            fixtures:
+                type: annotation
+                dir: "%kernel.root_dir%/../../Entity"
+                is_bundle: false
+                prefix: Modera\NotificationBundle\Tests\Fixtures\Entity
