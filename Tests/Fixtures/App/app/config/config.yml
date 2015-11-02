@@ -14,7 +14,7 @@ twig:
 doctrine:
     dbal:
         driver:   pdo_mysql
-        host:     mysql #127.0.0.1
+        host:     localhost
         port:     3306
         dbname:   modera_notificationsbundle
         user:     root
