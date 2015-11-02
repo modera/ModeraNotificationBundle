@@ -2,6 +2,7 @@
     "name": "modera/notification-bundle",
     "type": "symfony-bundle",
     "description": "Provides functionality to store/retrieve notifications.",
+    "license": "MIT",
     "require": {
         "php": ">=5.4.0",
 
