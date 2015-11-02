@@ -4,6 +4,7 @@ namespace Modera\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -12,7 +13,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ModeraNotificationExtension extends Extension
+class ModeraNotificationExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -24,7 +25,13 @@ class ModeraNotificationExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public function prepend(ContainerBuilder $container)
+    {
         $userClass = 'Modera\SecurityBundle\Entity\User';
         if (class_exists($userClass)) {
             $container->prependExtensionConfig('doctrine', array(
