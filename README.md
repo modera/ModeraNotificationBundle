@@ -11,10 +11,6 @@ Add this dependency to your composer.json:
 
     "modera/notification-bundle": "dev-master"
 
-Update your AppKernel class and add this:
-
-    new \Modera\NotificationBundle\ModeraNotificationBundle(),
-
 If bundle is used in conjunction with Modera Foundation then no additional configuration is needed. If you
 are using plain Symfony, then you need to configure Doctrine ORM and specify what implementation of
 `Symfony\Component\Security\Core\User\UserInterface` you are using. For example, if you have a entity
@@ -25,6 +21,10 @@ to make ModeraNotificationBundle bundle work:
         orm:
             resolve_target_entities:
                 Symfony\Component\Security\Core\User\UserInterface: Acme/AppBundle/Entity/User
+
+Also, don't forget to update your AppKernel class and add ModeraNotificationBundle there:
+
+    new \Modera\NotificationBundle\ModeraNotificationBundle(),
 
 ## Documentation
 
