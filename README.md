@@ -1,4 +1,5 @@
 # ModeraNotificationBundle
+[![Build Status](https://travis-ci.org/modera/ModeraNotificationBundle.svg?branch=master)](https://travis-ci.org/modera/ModeraNotificationBundle)
 
 Provides functionality to store/retrieve notifications.
 
