@@ -14,11 +14,7 @@ use Modera\NotificationBundle\Tests\Fixtures\Entity\User;
  */
 abstract class AbstractDatabaseTest extends FunctionalTestCase
 {
-    private static $entities = [
-        NotificationDefinition::class,
-        UserNotificationInstance::class,
-        User::class
-    ];
+    private static $entities = [];
     private static $metaClasses = [];
 
     /**
@@ -26,6 +22,12 @@ abstract class AbstractDatabaseTest extends FunctionalTestCase
      */
     public static function doSetUpBeforeClass()
     {
+        self::$entities = [
+            NotificationDefinition::clazz(),
+            UserNotificationInstance::clazz(),
+            User::clazz()
+        ];
+
         foreach (self::$entities as $className) {
             self::$metaClasses[] = self::$em->getClassMetadata($className);
         }

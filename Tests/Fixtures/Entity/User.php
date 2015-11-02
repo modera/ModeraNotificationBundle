@@ -34,6 +34,14 @@ class User implements UserInterface
         $this->username = $username;
     }
 
+    /**
+     * @return string
+     */
+    public static function clazz()
+    {
+        return get_called_class();
+    }
+
     // UserInterface "implementation":
 
     /**
