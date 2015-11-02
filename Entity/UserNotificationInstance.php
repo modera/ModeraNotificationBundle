@@ -37,11 +37,11 @@ class UserNotificationInstance implements NotificationInterface
     private $recipient;
 
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
-    private $isRead = false;
+    private $status = self::STATUS_NOT_READ;
 
     public function __construct(NotificationDefinition $definition, UserInterface $recipient)
     {
@@ -49,12 +49,25 @@ class UserNotificationInstance implements NotificationInterface
         $this->recipient = $recipient;
     }
 
+    public static function clazz()
+    {
+        return get_called_class();
+    }
+
     /**
      * @inheritdoc
      */
-    public function getContents()
+    public function getMessage()
     {
-        return $this->definition->getContents();
+        return $this->definition->getMessage();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeta()
+    {
+        return $this->definition->getMeta();
     }
 
     /**
@@ -82,26 +95,26 @@ class UserNotificationInstance implements NotificationInterface
     }
 
     /**
-     * @return boolean
-     */
-    public function isRead()
-    {
-        return $this->isRead;
-    }
-
-    /**
-     * @param boolean $isRead
-     */
-    public function setRead($isRead)
-    {
-        $this->isRead = $isRead;
-    }
-
-    /**
      * @return UserInterface
      */
     public function getRecipient()
     {
         return $this->recipient;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }

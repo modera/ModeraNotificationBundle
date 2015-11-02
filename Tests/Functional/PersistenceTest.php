@@ -13,48 +13,18 @@ use Sli\AuxBundle\Util\Toolkit;
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
  * @copyright 2015 Modera Foundation
  */
-class PersistenceTest extends FunctionalTestCase
+class PersistenceTest extends AbstractDatabaseTest
 {
-    private static $entities = [
-        NotificationDefinition::class,
-        UserNotificationInstance::class,
-        User::class
-    ];
-    private static $metaClasses = [];
-
-    /**
-     * @inheritdoc
-     */
-    public static function doSetUpBeforeClass()
-    {
-        foreach (self::$entities as $className) {
-            self::$metaClasses[] = self::$em->getClassMetadata($className);
-        }
-
-        $schemaTool = new SchemaTool(self::$em);
-        $schemaTool->dropSchema(self::$metaClasses);
-        $schemaTool->createSchema(self::$metaClasses);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function doTearDownAfterClass()
-    {
-        $schemaTool = new SchemaTool(self::$em);
-        $schemaTool->dropSchema(self::$metaClasses);
-    }
-
     public function testHowWellPersistenceWorks()
     {
-        $user = new User();
-        $user->username = 'john.doe';
+        $user = new User('john.doe');
 
-        $definition = new NotificationDefinition('foo');
+        $definition = new NotificationDefinition('foo message', 'foo_group');
         $instance1 = $definition->createInstance($user);
         $instance2 = $definition->createInstance($user);
 
-        $this->assertEquals('foo', $definition->getContents());
+        $this->assertEquals('foo message', $definition->getMessage());
+        $this->assertEquals('foo_group', $definition->getGroupName());
         $this->assertEquals(2, count($definition->getInstances()));
 
         self::$em->persist($user);

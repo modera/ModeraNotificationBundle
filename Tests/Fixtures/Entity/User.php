@@ -26,6 +26,14 @@ class User implements UserInterface
      */
     public $username;
 
+    /**
+     * @param string $username
+     */
+    public function __construct($username)
+    {
+        $this->username = $username;
+    }
+
     // UserInterface "implementation":
 
     /**

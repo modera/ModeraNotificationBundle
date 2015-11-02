@@ -24,5 +24,16 @@ class ModeraNotificationExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $userClass = 'Modera\SecurityBundle\Entity\User';
+        if (class_exists($userClass)) {
+            $container->prependExtensionConfig('doctrine', array(
+                'orm' => array(
+                    'resolve_target_entities' => array(
+                        'Symfony\Component\Security\Core\User\UserInterface' => $userClass
+                    )
+                )
+            ));
+        }
     }
 }

@@ -26,13 +26,16 @@ class NotificationDefinition
     private $id;
 
     /**
+     * A human readable text of notification. If you need to store some technical data please use $meta property
+     * instead.
+     *
      * @ORM\Column(type="text")
      */
-    private $contents;
+    private $message;
 
     /**
      * Every user will have its own notification, which is represented by UserNotificationInstance entity. When
-     * user has read notification then UserNotificationInstance then his own instance is going to be
+     * user has read notification then his own instance (UserNotificationInstance) is going to be
      * modified, NotificationDefinition stays untouched.
      *
      * @var UserNotificationInstance[]
@@ -41,13 +44,45 @@ class NotificationDefinition
      */
     private $instances;
 
-    public function __construct($contents = null)
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $groupName;
+
+    /**
+     * Metadata that you optionally may want to associate with a notification.
+     *
+     * @ORM\Column(type="json_array")
+     */
+    private $meta = array();
+
+    /**
+     * @param string $message
+     * @param string $groupName
+     */
+    public function __construct($message = null, $groupName = null)
     {
-        $this->contents = $contents;
+        $this->message = $message;
+        $this->groupName = $groupName;
 
         $this->instances = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
+    public static function clazz()
+    {
+        return get_called_class();
+    }
+
+    /**
+     * @param UserInterface $recipient
+     *
+     * @return UserNotificationInstance
+     */
     public function createInstance(UserInterface $recipient)
     {
         $instance = new UserNotificationInstance($this, $recipient);
@@ -78,24 +113,48 @@ class NotificationDefinition
     /**
      * @return mixed
      */
-    public function getContents()
+    public function getId()
     {
-        return $this->contents;
+        return $this->id;
     }
 
     /**
-     * @param mixed $contents
+     * @return null
      */
-    public function setContents($contents)
+    public function getMessage()
     {
-        $this->contents = $contents;
+        return $this->message;
+    }
+
+    /**
+     * @param null $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroupName()
+    {
+        return $this->groupName;
     }
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getMeta()
     {
-        return $this->id;
+        return $this->meta;
+    }
+
+    /**
+     * @param mixed $meta
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
     }
 }
