@@ -1,5 +1,7 @@
 # ModeraNotificationBundle
 [![Build Status](https://travis-ci.org/modera/ModeraNotificationBundle.svg?branch=master)](https://travis-ci.org/modera/ModeraNotificationBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/modera/ModeraNotificationBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/modera/ModeraNotificationBundle/?branch=master)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/2e7b46b0-ffe5-46fc-807f-63b8f4b9ad2d/mini.png)](https://insight.sensiolabs.com/projects/2e7b46b0-ffe5-46fc-807f-63b8f4b9ad2d)
 
 Provides functionality to store/retrieve notifications.
 

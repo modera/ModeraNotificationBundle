@@ -151,9 +151,9 @@ class NotificationDefinition
     }
 
     /**
-     * @param mixed $meta
+     * @param array $meta
      */
-    public function setMeta($meta)
+    public function setMeta(array $meta)
     {
         $this->meta = $meta;
     }
