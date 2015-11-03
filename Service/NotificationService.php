@@ -63,21 +63,49 @@ class NotificationService
     /**
      * Finds all notifications by given $group/$user and changes their status to $newStatus.
      *
-     * @param string $group
-     * @param UserInterface $user
+     * Possible array query keys are: recipient (instance of UserInterface), group (string), id(int).
+     * By combining different keys you are able to change scope of notifications whose statuses are going
+     * to be updated.
+     *
      * @param int $newStatus
+     * @param array $arrayQuery
      */
-    public function changeStatusByGroupAndUser($group, UserInterface $user, $newStatus)
+    public function changeStatus($newStatus, array $arrayQuery)
     {
         /* @var EntityManager $em */
         $em = $this->registry->getManager();
 
-        $query = sprintf(
-            'SELECT inc FROM %s inc LEFT JOIN inc.definition def WHERE def.groupName = ?0 AND inc.recipient = ?1',
-            UserNotificationInstance::clazz()
-        );
+        $querySegments = [
+            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz())
+        ];
+        $queryParams = [];
+
+        $hasId = isset($arrayQuery['id']);
+        $hasRecipient = isset($arrayQuery['recipient']);
+        $hasGroup = isset($arrayQuery['group']);
+        $hasQuery = $hasId || $hasRecipient || $hasGroup;
+
+        if ($hasQuery) {
+            $querySegments[] = 'WHERE ';
+        }
+
+        $filters = [];
+        if ($hasId) {
+            $filters[] = 'def.id = ?'.count($queryParams);
+            $queryParams[] = $arrayQuery['id'];
+        }
+        if ($hasRecipient) {
+            $filters[] = 'inc.recipient = ?'.count($queryParams);
+            $queryParams[] = $arrayQuery['recipient'];
+        }
+        if ($hasGroup) {
+            $filters[] = 'def.groupName = ?'.count($queryParams);
+            $queryParams[] = $arrayQuery['group'];
+        }
+
+        $query = implode(' ', $querySegments).implode(' AND ', $filters);
         $query = $em->createQuery($query);
-        $query->setParameters([$group, $user]);
+        $query->setParameters($queryParams);
 
         foreach ($query->getResult() as $instance) {
             /* @var UserNotificationInstance $instance*/
