@@ -10,8 +10,8 @@ use Modera\NotificationBundle\Model\NotificationInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Service provides basic routines for manipulating notifications - dispatching(creating), querying,
- * batch changing of notification statuses.
+ * Service provides basic routines for manipulating notifications - dispatching(creating), querying, batch changing
+ * of notification statuses.
  *
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
  * @copyright 2015 Modera Foundation
@@ -129,7 +129,7 @@ class NotificationService
      *
      * @return NotificationInterface[]
      */
-    public function fetch(array $arrayQuery)
+    public function fetchBy(array $arrayQuery)
     {
         /* @var EntityManager $em */
         $em = $this->registry->getManager();
@@ -163,5 +163,69 @@ class NotificationService
         $query->setParameters($queryParams);
 
         return $query->getResult();
+    }
+
+    /**
+     * Available query keys: ID (int), recipient (UserInterface).
+     *
+     * @throws \RuntimeException If more than one result is returned from persistence storage.
+     *
+     * @param array $arrayQuery
+     *
+     * @return NotificationInterface
+     */
+    public function fetchOneBy(array $arrayQuery)
+    {
+        /* @var EntityManager $em */
+        $em = $this->registry->getManager();
+
+        $hasId = isset($arrayQuery['id']);
+        $hasRecipient = isset($arrayQuery['recipient']);
+
+        $querySegments = [
+            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz())
+        ];
+        $queryParams = [];
+
+        if ($hasId || $hasRecipient) {
+            $querySegments[] = 'WHERE';
+        }
+
+        if ($hasId) {
+            $querySegments[] = 'def.id = ?'.count($queryParams);
+            $queryParams[] = $arrayQuery['id'];
+        }
+        if ($hasRecipient) {
+            if ($hasId) {
+                $querySegments[] = 'AND';
+            }
+
+            $querySegments[] = sprintf('inc.recipient IN (?%d)', count($queryParams));
+            $queryParams[] = [$arrayQuery['recipient']];
+        }
+
+        $query = $em->createQuery(implode(' ', $querySegments));
+        $query->setParameters($queryParams);
+
+        $result = $query->getResult();
+        if (count($result) > 1) {
+            throw new \RuntimeException('More than one notification returned for query: '.json_encode($arrayQuery));
+        }
+
+        return $result[0];
+    }
+
+    /**
+     * Saves/updates notification.
+     *
+     * @param object object
+     */
+    public function save($notification)
+    {
+        /* @var EntityManager $em */
+        $em = $this->registry->getManager();
+
+        $em->persist($notification);
+        $em->flush();
     }
 }

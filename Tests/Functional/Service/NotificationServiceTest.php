@@ -8,6 +8,7 @@ use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Service\NotificationService;
 use Modera\NotificationBundle\Tests\Fixtures\Entity\User;
 use Modera\NotificationBundle\Tests\Functional\AbstractDatabaseTest;
+use Symfony\Component\Security\Core\Exception\RuntimeException;
 
 /**
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
@@ -138,10 +139,10 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $fixtures = $this->loadFixtures();
 
-        $allNotifications = $service->fetch(array());
+        $allNotifications = $service->fetchBy(array());
         $this->assertEquals(4, count($allNotifications));
 
-        $byRecipientsNotifications = $service->fetch(array(
+        $byRecipientsNotifications = $service->fetchBy(array(
             'recipients' => [$fixtures['users'][0]]
         ));
         $this->assertEquals(2, count($byRecipientsNotifications));
@@ -152,7 +153,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $groupName = 'blah_group';
 
-        $byGroupNameNotifications = $service->fetch(array(
+        $byGroupNameNotifications = $service->fetchBy(array(
             'group' => $groupName
         ));
         $this->assertEquals(0, count($byGroupNameNotifications));
@@ -165,14 +166,14 @@ class NotificationServiceTest extends AbstractDatabaseTest
         self::$em->persist($def);
         self::$em->flush();
 
-        $byGroupNameNotifications = $service->fetch(array(
+        $byGroupNameNotifications = $service->fetchBy(array(
             'group' => $groupName
         ));
         $this->assertEquals(1, count($byGroupNameNotifications));
 
         // ---
 
-        $byGroupAndRecipientsNotification = $service->fetch(array(
+        $byGroupAndRecipientsNotification = $service->fetchBy(array(
             'group' => $fixtures['group_name'],
             'recipients' => [$fixtures['users'][0], $fixtures['users'][1]]
         ));
@@ -221,5 +222,57 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $user3Instances = $instancesRepository->findBy(array('recipient' => $user3->id));
         $this->assertEquals(0, count($user3Instances));
+    }
+
+    public function testFetchOneBy()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $fixtures = $this->loadFixtures();
+
+        $notification = $service->fetchOneBy(array(
+            'id' => $fixtures['instances'][2]->getDefinition()->getId(),
+            'recipient' => $fixtures['users'][1]
+        ));
+
+        $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testFetchOneByWithMoreThanOneResult()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $fixtures = $this->loadFixtures();
+
+        $notification = $service->fetchOneBy(array(
+            'id' => $fixtures['instances'][0]->getDefinition()->getId(),
+            'recipient' => $fixtures['users'][0]
+        ));
+
+        $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
+    }
+
+    public function testSave()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $fixtures = $this->loadFixtures();
+
+        /* @var UserNotificationInstance $notification */
+        $notification = $fixtures['instances'][0];
+        $notification->setStatus(12345);
+
+        $service->save($notification);
+
+        self::$em->clear();
+
+        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $notification->getId());
+        $this->assertEquals(12345, $instanceFromDb->getStatus());
     }
 }
