@@ -32,4 +32,9 @@ interface NotificationInterface
      * @return array
      */
     public function getMeta();
+
+    /**
+     * @return string
+     */
+    public function getGroup();
 }

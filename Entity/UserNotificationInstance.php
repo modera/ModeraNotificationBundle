@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * UserNotifications links a recipient and a notification essence represented by Notification entity.
  *
+ * @private
+ *
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
  * @copyright 2015 Modera Foundation
  *
@@ -68,6 +70,14 @@ class UserNotificationInstance implements NotificationInterface
     public function getMeta()
     {
         return $this->definition->getMeta();
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->definition->getGroupName();
     }
 
     /**

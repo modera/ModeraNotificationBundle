@@ -19,7 +19,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
     {
         $user1 = new User('bob');
         $user2 = new User('jane');
-        $user3 = new User('jane');
+        $user3 = new User('john');
 
         $groupName = 'foo group';
 
@@ -120,5 +120,44 @@ class NotificationServiceTest extends AbstractDatabaseTest
         foreach ($byGroupAndRecipientsNotification as $notification) {
             $this->assertInstanceOf('Modera\NotificationBundle\Model\NotificationInterface', $notification);
         }
+    }
+
+    public function testDispatch()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $user1 = new User('bob');
+        $user2 = new User('jane');
+        $user3 = new User('john');
+
+        self::$em->persist($user1);
+        self::$em->persist($user2);
+        self::$em->flush();
+
+        $meta = array(
+            'some_key' => 'some_value'
+        );
+        $msg = 'hello world';
+        $group = 'foogroup';
+
+        $service->dispatch($group, $msg, [$user1, $user2], $meta);
+
+        $instancesRepository = self::$em->getRepository(UserNotificationInstance::clazz());
+
+        /* @var UserNotificationInstance[] $user1Instances*/
+        $user1Instances = $instancesRepository->findBy(array('recipient' => $user1->id));
+        $this->assertEquals(1, count($user1Instances));
+
+        $definition = $user1Instances[0]->getDefinition();
+        $this->assertEquals($meta, $definition->getMeta());
+        $this->assertEquals($msg, $definition->getMessage());
+        $this->assertEquals($group, $definition->getGroupName());
+
+        $user2Instances = $instancesRepository->findBy(array('recipient' => $user2->id));
+        $this->assertEquals(1, count($user2Instances));
+
+        $user3Instances = $instancesRepository->findBy(array('recipient' => $user3->id));
+        $this->assertEquals(0, count($user3Instances));
     }
 }

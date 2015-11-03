@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Notification entity describes essence and contents of a notification. Notification delivery, read statuses
  * are stored in UserNotificationInstance entity.
  *
+ * @private
+ *
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
  * @copyright 2015 Modera Foundation
  *
@@ -45,6 +47,9 @@ class NotificationDefinition
     private $instances;
 
     /**
+     * Allows to logically group notifications. To understand it more easily, think of this field as a way
+     * to group your notifications in "groups", where only last notification of given "group" is shown at a time.
+     *
      * @var string
      *
      * @ORM\Column(type="string")

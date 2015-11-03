@@ -36,14 +36,14 @@ class NotificationService
      *
      * @param string $group
      * @param string $message
-     * @param array $recipients
+     * @param UserInterface[] $recipients
      * @param array $meta
      *
-     * @return NotificationInterface[]
+     * @return mixed A notification ID
      */
     public function dispatch($group, $message, array $recipients, array $meta = array())
     {
-        $def = new NotificationDefinition($group, $message);
+        $def = new NotificationDefinition($message, $group);
         $def->setMeta($meta);
 
         $instances = [];
@@ -57,7 +57,7 @@ class NotificationService
         $em->persist($def);
         $em->flush();
 
-        return $instances;
+        return $def->getId();
     }
 
     /**
