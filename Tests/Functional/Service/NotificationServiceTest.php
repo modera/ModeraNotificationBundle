@@ -257,6 +257,27 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
     }
 
+    public function testFetchOneByWithNoResults()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $user = new User('bob');
+        $def = new NotificationDefinition('dat msg', 'dat_group');
+
+        self::$em->persist($user);
+        self::$em->persist($def);
+        self::$em->flush();
+        self::$em->clear();
+
+        $notification = $service->fetchOneBy(array(
+            'id' => $def->getId(),
+            'recipient' => $user->id
+        ));
+
+        $this->assertNull($notification);
+    }
+
     public function testSave()
     {
         /* @var NotificationService $service*/

@@ -46,9 +46,8 @@ class NotificationService
         $def = new NotificationDefinition($message, $group);
         $def->setMeta($meta);
 
-        $instances = [];
         foreach ($recipients as $user) {
-            $instances[] = $def->createInstance($user);
+            $def->createInstance($user);
         }
 
         /* @var EntityManager $em */
@@ -172,7 +171,7 @@ class NotificationService
      *
      * @param array $arrayQuery
      *
-     * @return NotificationInterface
+     * @return NotificationInterface|null NULL is returned when no notification is found
      */
     public function fetchOneBy(array $arrayQuery)
     {
@@ -210,6 +209,8 @@ class NotificationService
         $result = $query->getResult();
         if (count($result) > 1) {
             throw new \RuntimeException('More than one notification returned for query: '.json_encode($arrayQuery));
+        } else if (count($result) == 0) {
+            return;
         }
 
         return $result[0];
