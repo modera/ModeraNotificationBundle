@@ -115,7 +115,9 @@ class NotificationService
     }
 
     /**
-     * Allows to fetch notifications from storage. A sample query may look akin to this:
+     * Allows to fetch notifications from storage.
+     *
+     * Sample query.
      *
      * array(
      *     'group' => 'foo_group',
