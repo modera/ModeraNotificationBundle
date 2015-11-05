@@ -119,7 +119,8 @@ class NotificationService
      *
      * array(
      *     'group' => 'foo_group',
-     *     'recipients' => [$user1, $user2] // instances of UserInterface
+     *     'recipients' => [$user1, $user2] // instances of UserInterface,
+     *     'status' => NotificationInterface::STATUS_NOT_READ
      * );
      *
      * If none of parameters is provided then all available notifications will be fetched.
@@ -132,33 +133,38 @@ class NotificationService
     {
         /* @var EntityManager $em */
         $em = $this->registry->getManager();
-
-        $querySegments = [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz())
-        ];
         $queryParams = [];
 
         $hasGroup = isset($arrayQuery['group']);
         $hasRecipients = isset($arrayQuery['recipients']) && is_array($arrayQuery['recipients']) && count($arrayQuery['recipients']) > 0;
+        $hasStatus = isset($arrayQuery['status']);
 
-        if ($hasGroup || $hasRecipients) {
+        $whereSegments = [];
+        if ($hasGroup || $hasRecipients || $hasStatus) {
             $querySegments[] = 'WHERE';
 
             if ($hasGroup) {
-                $querySegments[] = 'def.groupName = ?'.count($queryParams);
+                $whereSegments[] = 'def.groupName = ?'.count($queryParams);
                 $queryParams[] = $arrayQuery['group'];
             }
             if ($hasRecipients) {
-                if ($hasGroup) {
-                    $querySegments[] = 'AND';
-                }
-
-                $querySegments[] = sprintf('inc.recipient IN (?%d)', count($queryParams));
+                $whereSegments[] = sprintf('inc.recipient IN (?%d)', count($queryParams));
                 $queryParams[] = $arrayQuery['recipients'];
+            }
+            if ($hasStatus) {
+                $whereSegments[] = 'inc.status = ?'.count($queryParams);
+                $queryParams[] = $arrayQuery['status'];
             }
         }
 
-        $query = $em->createQuery(implode(' ', $querySegments));
+        $query = implode(' ', [
+            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            count($whereSegments) > 0 ? 'WHERE' : '',
+            implode(' AND ', $whereSegments),
+            'ORDER BY inc.id'
+        ]);
+
+        $query = $em->createQuery($query);
         $query->setParameters($queryParams);
 
         return $query->getResult();

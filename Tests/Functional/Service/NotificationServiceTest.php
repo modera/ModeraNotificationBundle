@@ -29,6 +29,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $instance2 = $def1->createInstance($user1);
 
         $instance3 = $def1->createInstance($user2);
+        $instance3->setStatus(1234);
 
         $instance4 = $def1->createInstance($user3);
 
@@ -183,6 +184,20 @@ class NotificationServiceTest extends AbstractDatabaseTest
         foreach ($byGroupAndRecipientsNotification as $notification) {
             $this->assertInstanceOf('Modera\NotificationBundle\Model\NotificationInterface', $notification);
         }
+    }
+
+    public function testFetchByStatus()
+    {
+        /* @var NotificationService $service*/
+        $service = self::$container->get('modera_notification.service.notification_service');
+
+        $fixtures = $this->loadFixtures();
+
+        $notifications = $service->fetchBy(array(
+            'status' => 1234 // see loadFixtures() method
+        ));
+
+        $this->assertEquals(1, count($notifications));
     }
 
     public function testDispatch()
