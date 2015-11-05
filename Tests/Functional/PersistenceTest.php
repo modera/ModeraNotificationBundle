@@ -2,12 +2,9 @@
 
 namespace Modera\NotificationBundle\Tests\Functional;
 
-use Doctrine\ORM\Tools\SchemaTool;
-use Modera\FoundationBundle\Testing\FunctionalTestCase;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Tests\Fixtures\Entity\User;
-use Sli\AuxBundle\Util\Toolkit;
 
 /**
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>

@@ -124,7 +124,7 @@ class NotificationDefinition
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getMessage()
     {

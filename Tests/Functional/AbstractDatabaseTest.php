@@ -18,14 +18,14 @@ abstract class AbstractDatabaseTest extends FunctionalTestCase
     private static $metaClasses = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function doSetUpBeforeClass()
     {
         self::$entities = [
             NotificationDefinition::clazz(),
             UserNotificationInstance::clazz(),
-            User::clazz()
+            User::clazz(),
         ];
 
         foreach (self::$entities as $className) {
@@ -38,7 +38,7 @@ abstract class AbstractDatabaseTest extends FunctionalTestCase
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function doTearDownAfterClass()
     {

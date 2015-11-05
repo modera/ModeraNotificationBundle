@@ -2,7 +2,6 @@
 
 namespace Modera\NotificationBundle\Tests\Functional\Service;
 
-use Modera\FoundationBundle\Testing\FunctionalTestCase;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Service\NotificationService;
@@ -42,7 +41,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         return array(
             'group_name' => $groupName,
             'users' => [$user1, $user2, $user3],
-            'instances' => [$instance1, $instance2, $instance3]
+            'instances' => [$instance1, $instance2, $instance3],
         );
     }
 
@@ -56,7 +55,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $newStatus = 777;
         $service->changeStatus($newStatus, array(
             'group' => $fixtures['group_name'],
-            'recipient' => $fixtures['users'][0]
+            'recipient' => $fixtures['users'][0],
         ));
 
         self::$em->clear();
@@ -95,7 +94,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $newStatus = 777;
         $service->changeStatus($newStatus, array(
             'id' => $def->getId(),
-            'recipient' => $anotherUser
+            'recipient' => $anotherUser,
         ));
 
         /* @var UserNotificationInstance $instance1FromDb*/
@@ -120,7 +119,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $newStatus = 777;
         $service->changeStatus($newStatus, array(
-            'id' => $fixtures['instances'][0]->getDefinition()->getId()
+            'id' => $fixtures['instances'][0]->getDefinition()->getId(),
         ));
 
         self::$em->clear();
@@ -144,7 +143,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $this->assertEquals(4, count($allNotifications));
 
         $byRecipientsNotifications = $service->fetchBy(array(
-            'recipients' => [$fixtures['users'][0]]
+            'recipients' => [$fixtures['users'][0]],
         ));
         $this->assertEquals(2, count($byRecipientsNotifications));
         $this->assertEquals($fixtures['instances'][0]->getId(), $byRecipientsNotifications[0]->getId());
@@ -155,7 +154,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $groupName = 'blah_group';
 
         $byGroupNameNotifications = $service->fetchBy(array(
-            'group' => $groupName
+            'group' => $groupName,
         ));
         $this->assertEquals(0, count($byGroupNameNotifications));
 
@@ -168,7 +167,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         self::$em->flush();
 
         $byGroupNameNotifications = $service->fetchBy(array(
-            'group' => $groupName
+            'group' => $groupName,
         ));
         $this->assertEquals(1, count($byGroupNameNotifications));
 
@@ -176,7 +175,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $byGroupAndRecipientsNotification = $service->fetchBy(array(
             'group' => $fixtures['group_name'],
-            'recipients' => [$fixtures['users'][0], $fixtures['users'][1]]
+            'recipients' => [$fixtures['users'][0], $fixtures['users'][1]],
         ));
 
         $this->assertEquals(3, count($byGroupAndRecipientsNotification));
@@ -194,7 +193,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $fixtures = $this->loadFixtures();
 
         $notifications = $service->fetchBy(array(
-            'status' => 1234 // see loadFixtures() method
+            'status' => 1234, // see loadFixtures() method
         ));
 
         $this->assertEquals(1, count($notifications));
@@ -214,7 +213,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         self::$em->flush();
 
         $meta = array(
-            'some_key' => 'some_value'
+            'some_key' => 'some_value',
         );
         $msg = 'hello world';
         $group = 'foogroup';
@@ -248,7 +247,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $notification = $service->fetchOneBy(array(
             'id' => $fixtures['instances'][2]->getDefinition()->getId(),
-            'recipient' => $fixtures['users'][1]
+            'recipient' => $fixtures['users'][1],
         ));
 
         $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
@@ -266,7 +265,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $notification = $service->fetchOneBy(array(
             'id' => $fixtures['instances'][0]->getDefinition()->getId(),
-            'recipient' => $fixtures['users'][0]
+            'recipient' => $fixtures['users'][0],
         ));
 
         $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
@@ -287,7 +286,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $notification = $service->fetchOneBy(array(
             'id' => $def->getId(),
-            'recipient' => $user->id
+            'recipient' => $user->id,
         ));
 
         $this->assertNull($notification);

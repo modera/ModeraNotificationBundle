@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -28,7 +28,7 @@ class ModeraNotificationExtension extends Extension implements PrependExtensionI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -37,9 +37,9 @@ class ModeraNotificationExtension extends Extension implements PrependExtensionI
             $container->prependExtensionConfig('doctrine', array(
                 'orm' => array(
                     'resolve_target_entities' => array(
-                        'Symfony\Component\Security\Core\User\UserInterface' => $userClass
-                    )
-                )
+                        'Symfony\Component\Security\Core\User\UserInterface' => $userClass,
+                    ),
+                ),
             ));
         }
     }

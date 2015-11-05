@@ -34,10 +34,10 @@ class NotificationService
     /**
      * Dispatches a notification.
      *
-     * @param string $group
-     * @param string $message
+     * @param string          $group
+     * @param string          $message
      * @param UserInterface[] $recipients
-     * @param array $meta
+     * @param array           $meta
      *
      * @return mixed A notification ID
      */
@@ -66,7 +66,7 @@ class NotificationService
      * By combining different keys you are able to change scope of notifications whose statuses are going
      * to be updated.
      *
-     * @param int $newStatus
+     * @param int   $newStatus
      * @param array $arrayQuery
      */
     public function changeStatus($newStatus, array $arrayQuery)
@@ -75,7 +75,7 @@ class NotificationService
         $em = $this->registry->getManager();
 
         $querySegments = [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz())
+            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
         ];
         $queryParams = [];
 
@@ -161,7 +161,7 @@ class NotificationService
             sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
             count($whereSegments) > 0 ? 'WHERE' : '',
             implode(' AND ', $whereSegments),
-            'ORDER BY inc.id'
+            'ORDER BY inc.id',
         ]);
 
         $query = $em->createQuery($query);
@@ -188,7 +188,7 @@ class NotificationService
         $hasRecipient = isset($arrayQuery['recipient']);
 
         $querySegments = [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz())
+            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
         ];
         $queryParams = [];
 
@@ -215,7 +215,7 @@ class NotificationService
         $result = $query->getResult();
         if (count($result) > 1) {
             throw new \RuntimeException('More than one notification returned for query: '.json_encode($arrayQuery));
-        } else if (count($result) == 0) {
+        } elseif (count($result) == 0) {
             return;
         }
 

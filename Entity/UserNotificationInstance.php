@@ -57,7 +57,7 @@ class UserNotificationInstance implements NotificationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMessage()
     {
@@ -65,7 +65,7 @@ class UserNotificationInstance implements NotificationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMeta()
     {

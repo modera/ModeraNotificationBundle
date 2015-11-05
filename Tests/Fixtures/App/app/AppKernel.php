@@ -15,13 +15,13 @@ class AppKernel extends Kernel
 
             new \Modera\FoundationBundle\ModeraFoundationBundle(),
 
-            new \Modera\NotificationBundle\ModeraNotificationBundle()
+            new \Modera\NotificationBundle\ModeraNotificationBundle(),
         );
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config.yml');
+        $loader->load(__DIR__.'/config/config.yml');
     }
 
     /**
@@ -29,7 +29,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir() . '/ModeraNotificationBundle/cache';
+        return sys_get_temp_dir().'/ModeraNotificationBundle/cache';
     }
 
     /**
@@ -37,6 +37,6 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return sys_get_temp_dir() . '/ModeraNotificationBundle/logs';
+        return sys_get_temp_dir().'/ModeraNotificationBundle/logs';
     }
 }
