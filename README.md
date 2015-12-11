@@ -10,7 +10,7 @@ Provides functionality to store/retrieve notifications.
 
 Add this dependency to your composer.json:
 
-    "modera/notification-bundle": "~1.0"
+    "modera/notification-bundle": "dev-master"
 
 If bundle is used in conjunction with Modera Foundation then no additional configuration is needed. If you
 are using plain Symfony, then you need to configure Doctrine ORM and specify what implementation of
