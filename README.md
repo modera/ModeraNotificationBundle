@@ -10,7 +10,7 @@ Provides functionality to store/retrieve notifications.
 
 Add this dependency to your composer.json:
 
-    "modera/notification-bundle": "dev-master"
+    "modera/notification-bundle": "~1.0"
 
 If bundle is used in conjunction with Modera Foundation then no additional configuration is needed. If you
 are using plain Symfony, then you need to configure Doctrine ORM and specify what implementation of
@@ -26,6 +26,10 @@ to make ModeraNotificationBundle bundle work:
 Also, don't forget to update your AppKernel class and add ModeraNotificationBundle there:
 
     new \Modera\NotificationBundle\ModeraNotificationBundle(),
+
+And finally update database:
+
+    app/console doctrine:schema:update --force
 
 ## Documentation
 

@@ -2,6 +2,7 @@
 
 namespace Modera\NotificationBundle\Tests\Functional;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Modera\FoundationBundle\Testing\FunctionalTestCase;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
@@ -44,5 +45,13 @@ abstract class AbstractDatabaseTest extends FunctionalTestCase
     {
         $schemaTool = new SchemaTool(self::$em);
         $schemaTool->dropSchema(self::$metaClasses);
+    }
+
+    /**
+     * @return EntityManager
+     */
+    protected function em()
+    {
+        return self::$container->get('doctrine.orm.entity_manager');
     }
 }

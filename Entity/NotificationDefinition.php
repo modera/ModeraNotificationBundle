@@ -64,6 +64,13 @@ class NotificationDefinition
     private $meta = array();
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
      * @param string $message
      * @param string $groupName
      */
@@ -72,6 +79,7 @@ class NotificationDefinition
         $this->message = $message;
         $this->groupName = $groupName;
 
+        $this->createdAt = new \DateTime('now');
         $this->instances = new ArrayCollection();
     }
 
@@ -161,5 +169,13 @@ class NotificationDefinition
     public function setMeta(array $meta)
     {
         $this->meta = $meta;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
