@@ -31,6 +31,9 @@
     },
     "target-dir": "Modera/NotificationBundle",
     "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        },
         "modera-module": {
             "register-bundle": "Modera\\NotificationBundle\\ModeraNotificationBundle"
         }
