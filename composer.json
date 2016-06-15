@@ -6,17 +6,16 @@
     "require": {
         "php": ">=5.4.0",
 
-        "modera/module-bundle": "~1.0",
+        "modera/module-bundle": "~1.0|~2.0",
 
-        "doctrine\/orm": "~2.2,>=2.2.3,<2.5",
-        "doctrine\/dbal": "<2.5",
-        "doctrine\/doctrine-bundle": "~1.4",
-        "symfony/framework-bundle": "~2.3"
+        "doctrine/orm": "~2.2,>=2.2.3,<2.5",
+        "doctrine/doctrine-bundle": "~1.4",
+        "symfony/symfony": "~2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "phake/phake": "~2.0",
-        "modera/foundation-bundle": "~1.0",
+        "modera/foundation-bundle": "~1.0|~2.0",
         "sergeil/aux-bundle": "~1.0"
     },
     "authors": [
