@@ -78,4 +78,9 @@ class User implements UserInterface
     public function eraseCredentials()
     {
     }
+
+    public function __toString()
+    {
+        return sprintf('%s (%d)', $this->username, $this->id);
+    }
 }

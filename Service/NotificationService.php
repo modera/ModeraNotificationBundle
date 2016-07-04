@@ -7,9 +7,12 @@ use Doctrine\ORM\EntityManager;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Model\NotificationInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @deprecated This service is deprecated in favor to Dispatching/NotificationCenter, use it instead.
+ *
  * Service provides basic routines for manipulating notifications - dispatching(creating), querying, batch changing
  * of notification statuses.
  *
@@ -21,17 +24,19 @@ class NotificationService
     /**
      * @var Registry
      */
-    private $registry;
+    private $doctrineRegistry;
 
     /**
      * @param Registry $registry
      */
-    public function __construct(Registry $registry)
+    public function __construct(RegistryInterface $doctrineRegistry)
     {
-        $this->registry = $registry;
+        $this->doctrineRegistry = $doctrineRegistry;
     }
 
     /**
+     * @deprecated Use NotificationCenter::createNotificationBuilder() method and then its dispatch() method.
+     *
      * Dispatches a notification.
      *
      * @param string          $group
@@ -51,7 +56,7 @@ class NotificationService
         }
 
         /* @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = $this->doctrineRegistry->getManager();
 
         $em->persist($def);
         $em->flush();
@@ -72,7 +77,7 @@ class NotificationService
     public function changeStatus($newStatus, array $arrayQuery)
     {
         /* @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = $this->doctrineRegistry->getManager();
 
         $querySegments = [
             sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
@@ -134,7 +139,7 @@ class NotificationService
     public function fetchBy(array $arrayQuery)
     {
         /* @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = $this->doctrineRegistry->getManager();
         $queryParams = [];
 
         $hasGroup = isset($arrayQuery['group']);
@@ -184,7 +189,7 @@ class NotificationService
     public function fetchOneBy(array $arrayQuery)
     {
         /* @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = $this->doctrineRegistry->getManager();
 
         $hasId = isset($arrayQuery['id']);
         $hasRecipient = isset($arrayQuery['recipient']);
@@ -232,7 +237,7 @@ class NotificationService
     public function save($notification)
     {
         /* @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = $this->doctrineRegistry->getManager();
 
         $em->persist($notification);
         $em->flush();

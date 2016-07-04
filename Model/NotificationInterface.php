@@ -17,6 +17,13 @@ interface NotificationInterface
     const STATUS_READ = 1;
 
     /**
+     * Returns a unique notification identifier.
+     *
+     * @return mixed
+     */
+    public function getId();
+
+    /**
      * @return string
      */
     public function getMessage();

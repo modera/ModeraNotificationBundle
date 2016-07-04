@@ -10,7 +10,8 @@
 
         "doctrine/orm": "~2.2,>=2.2.3,<2.5",
         "doctrine/doctrine-bundle": "~1.4",
-        "symfony/symfony": "~2.3"
+        "symfony/symfony": "~2.3",
+        "sergeil/expander-bundle": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",

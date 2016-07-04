@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "61474e2372cd51c222651f018d8b9091",
-    "content-hash": "a80cb2131e6100a1017026f4a8e46137",
+    "hash": "0e14e6649f59016bb9d384d55aaeb38d",
+    "content-hash": "2c5de33853a7e8768911fd1e8844f4c7",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -758,171 +758,34 @@
             "time": "2012-05-30 15:01:08"
         },
         {
-            "name": "guzzle/common",
+            "name": "guzzle/guzzle",
             "version": "v3.0.7",
-            "target-dir": "Guzzle/Common",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Guzzle3/common.git",
-                "reference": "b7c6ec11fb5f141c31fea22844aac2343db853f4"
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "f31f35d1669382936861533bd0217fcf830dc9a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Guzzle3/common/zipball/b7c6ec11fb5f141c31fea22844aac2343db853f4",
-                "reference": "b7c6ec11fb5f141c31fea22844aac2343db853f4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2",
-                "symfony/event-dispatcher": ">=2.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle\\Common": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Common libraries used by Guzzle",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "collection",
-                "common",
-                "event",
-                "exception"
-            ],
-            "abandoned": "guzzle/guzzle",
-            "time": "2012-12-19 23:06:35"
-        },
-        {
-            "name": "guzzle/http",
-            "version": "v3.0.7",
-            "target-dir": "Guzzle/Http",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Guzzle3/http.git",
-                "reference": "eea92ef701a69b48d1e37fc9dd79058d41aeec93"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Guzzle3/http/zipball/eea92ef701a69b48d1e37fc9dd79058d41aeec93",
-                "reference": "eea92ef701a69b48d1e37fc9dd79058d41aeec93",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f31f35d1669382936861533bd0217fcf830dc9a9",
+                "reference": "f31f35d1669382936861533bd0217fcf830dc9a9",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "guzzle/common": "self.version",
-                "guzzle/parser": "self.version",
-                "guzzle/stream": "self.version",
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle\\Http": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "HTTP libraries used by Guzzle",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "Guzzle",
-                "client",
-                "curl",
-                "http",
-                "http client"
-            ],
-            "abandoned": "guzzle/guzzle",
-            "time": "2012-12-14 00:49:17"
-        },
-        {
-            "name": "guzzle/parser",
-            "version": "v3.0.7",
-            "target-dir": "Guzzle/Parser",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Guzzle3/parser.git",
-                "reference": "8a1f6829d75274de16232cb327597db3067a2074"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Guzzle3/parser/zipball/8a1f6829d75274de16232cb327597db3067a2074",
-                "reference": "8a1f6829d75274de16232cb327597db3067a2074",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle\\Parser": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Interchangeable parsers used by Guzzle",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "URI Template",
-                "cookie",
-                "http",
-                "message",
-                "url"
-            ],
-            "abandoned": "guzzle/guzzle",
-            "time": "2012-12-07 16:45:11"
-        },
-        {
-            "name": "guzzle/plugin",
-            "version": "v3.0.7",
-            "target-dir": "Guzzle/Plugin",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Guzzle3/plugin.git",
-                "reference": "fab9f052ffd6bdfa0c9777a99d5d551647c07ba0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Guzzle3/plugin/zipball/fab9f052ffd6bdfa0c9777a99d5d551647c07ba0",
-                "reference": "fab9f052ffd6bdfa0c9777a99d5d551647c07ba0",
-                "shasum": ""
-            },
-            "require": {
-                "guzzle/http": "self.version",
-                "php": ">=5.3.2"
+                "php": ">=5.3.2",
+                "symfony/event-dispatcher": ">=2.1"
             },
             "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
                 "guzzle/plugin-async": "self.version",
                 "guzzle/plugin-backoff": "self.version",
                 "guzzle/plugin-cache": "self.version",
@@ -932,11 +795,19 @@
                 "guzzle/plugin-log": "self.version",
                 "guzzle/plugin-md5": "self.version",
                 "guzzle/plugin-mock": "self.version",
-                "guzzle/plugin-oauth": "self.version"
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
             },
-            "suggest": {
-                "guzzle/cache": "v3.0.7",
-                "guzzle/log": "v3.0.7"
+            "require-dev": {
+                "doctrine/common": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "symfony/class-loader": "*",
+                "zend/zend-cache1": "1.12",
+                "zend/zend-log1": "1.12",
+                "zendframework/zend-cache": "2.0.*",
+                "zendframework/zend-log": "2.0.*"
             },
             "type": "library",
             "extra": {
@@ -946,7 +817,8 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Guzzle\\Plugin": ""
+                    "Guzzle\\Tests": "tests/",
+                    "Guzzle": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -958,70 +830,25 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
                 }
             ],
-            "description": "Guzzle plugin component containing all Guzzle HTTP plugins",
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
-                "Guzzle",
                 "client",
-                "extension",
+                "curl",
+                "framework",
                 "http",
-                "plugin"
+                "http client",
+                "rest",
+                "web service"
             ],
-            "abandoned": "guzzle/guzzle",
-            "time": "2012-12-07 16:45:11"
-        },
-        {
-            "name": "guzzle/stream",
-            "version": "v3.0.7",
-            "target-dir": "Guzzle/Stream",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Guzzle3/stream.git",
-                "reference": "c499757c760159188a9573362b8086ef25e6734e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Guzzle3/stream/zipball/c499757c760159188a9573362b8086ef25e6734e",
-                "reference": "c499757c760159188a9573362b8086ef25e6734e",
-                "shasum": ""
-            },
-            "require": {
-                "guzzle/common": "self.version",
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle\\Stream": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle stream wrapper component",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "Guzzle",
-                "component",
-                "stream"
-            ],
-            "abandoned": "guzzle/guzzle",
-            "time": "2012-12-07 16:45:11"
+            "abandoned": "guzzlehttp/guzzle",
+            "time": "2012-12-19 23:06:35"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1117,21 +944,21 @@
         },
         {
             "name": "knplabs/packagist-api",
-            "version": "v1.2",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/packagist-api.git",
-                "reference": "22eef9dfc163da33e78af2ae1487966774b54db5"
+                "reference": "9aebf8238943289d3bc3ab51e0014ed94a7a266a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/packagist-api/zipball/22eef9dfc163da33e78af2ae1487966774b54db5",
-                "reference": "22eef9dfc163da33e78af2ae1487966774b54db5",
+                "url": "https://api.github.com/repos/KnpLabs/packagist-api/zipball/9aebf8238943289d3bc3ab51e0014ed94a7a266a",
+                "reference": "9aebf8238943289d3bc3ab51e0014ed94a7a266a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "~1.0",
-                "guzzle/http": "~3.0",
+                "guzzle/guzzle": "~3.0",
                 "php": ">=5.3.2"
             },
             "require-dev": {
@@ -1166,7 +993,7 @@
                 "composer",
                 "packagist"
             ],
-            "time": "2014-09-17 13:49:46"
+            "time": "2015-09-07 14:25:16"
         },
         {
             "name": "modera/module",
@@ -1220,28 +1047,33 @@
         },
         {
             "name": "modera/module-bundle",
-            "version": "v1.0.2",
+            "version": "v2.0.1",
             "target-dir": "Modera/ModuleBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modera/ModeraModuleBundle.git",
-                "reference": "4d86114895c3ecf95bf61a3665f0be8aac5d2fa8"
+                "reference": "3d7dad859ba87f486d985c7b337dcffc9e7c4807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modera/ModeraModuleBundle/zipball/4d86114895c3ecf95bf61a3665f0be8aac5d2fa8",
-                "reference": "4d86114895c3ecf95bf61a3665f0be8aac5d2fa8",
+                "url": "https://api.github.com/repos/modera/ModeraModuleBundle/zipball/3d7dad859ba87f486d985c7b337dcffc9e7c4807",
+                "reference": "3d7dad859ba87f486d985c7b337dcffc9e7c4807",
                 "shasum": ""
             },
             "require": {
-                "modera/module": "~1.0",
-                "php": ">=5.3.0",
-                "symfony/framework-bundle": "~2.0"
+                "modera/module": "~1.0|~2.0",
+                "php": ">=5.4.0",
+                "sensio/generator-bundle": "~2.3|~3.0",
+                "symfony/symfony": "~2.0"
+            },
+            "require-dev": {
+                "phake/phake": "2.*",
+                "phpunit/phpunit": "3.*"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -1257,9 +1089,14 @@
                 {
                     "name": "Sergei Vizel",
                     "email": "sergei.vizel@modera.org"
+                },
+                {
+                    "name": "Sergei Lissovski",
+                    "email": "sergei.lissovski@modera.org"
                 }
             ],
-            "time": "2015-11-09 12:09:31"
+            "description": "Adds support for dynamical bundles installation.",
+            "time": "2016-06-13 08:25:19"
         },
         {
             "name": "paragonie/random_compat",
@@ -1517,6 +1354,106 @@
                 "stream"
             ],
             "time": "2014-02-16 19:48:52"
+        },
+        {
+            "name": "sensio/generator-bundle",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
+                "reference": "d1be460925376703a470a3ac6ec034eb7eab3892"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/d1be460925376703a470a3ac6ec034eb7eab3892",
+                "reference": "d1be460925376703a470a3ac6ec034eb7eab3892",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/console": "~2.7|~3.0",
+                "symfony/framework-bundle": "~2.7|~3.0",
+                "symfony/process": "~2.7|~3.0",
+                "symfony/yaml": "~2.7|~3.0"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.4",
+                "symfony/doctrine-bridge": "~2.7|~3.0",
+                "twig/twig": "~1.18"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sensio\\Bundle\\GeneratorBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "This bundle generates code for you",
+            "time": "2016-06-20 05:58:05"
+        },
+        {
+            "name": "sergeil/expander-bundle",
+            "version": "v1.0.1",
+            "target-dir": "Sli/ExpanderBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sergeil/ExpanderBundle.git",
+                "reference": "e34ba3f47c23c4b9045675052804631e5760769a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sergeil/ExpanderBundle/zipball/e34ba3f47c23c4b9045675052804631e5760769a",
+                "reference": "e34ba3f47c23c4b9045675052804631e5760769a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/framework-bundle": "~2.3"
+            },
+            "require-dev": {
+                "modera/foundation-bundle": "dev-master",
+                "phake/phake": "~1.0",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Sli\\ExpanderBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergei Lissovski",
+                    "email": "sergei.lissovski@gmail.com",
+                    "homepage": "http://sergei.lissovski.org/"
+                }
+            ],
+            "description": "Provides an easy way how to leverage native DIC tags based mechanism for creating extension-points.",
+            "homepage": "https://github.com/sergeil/ExpanderBundle",
+            "keywords": [
+                "extensibility"
+            ],
+            "time": "2014-09-15 10:52:44"
         },
         {
             "name": "symfony/polyfill-apcu",
@@ -2032,16 +1969,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.7",
+            "version": "v2.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "663b2d6202c3149515b39cfe50a174a130acb8e2"
+                "reference": "038d13264f732f9bba850c423e374dc72874d1a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/663b2d6202c3149515b39cfe50a174a130acb8e2",
-                "reference": "663b2d6202c3149515b39cfe50a174a130acb8e2",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/038d13264f732f9bba850c423e374dc72874d1a6",
+                "reference": "038d13264f732f9bba850c423e374dc72874d1a6",
                 "shasum": ""
             },
             "require": {
@@ -2115,7 +2052,7 @@
                 "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.2",
                 "doctrine/orm": "~2.4,>=2.4.5",
-                "egulias/email-validator": "~1.2",
+                "egulias/email-validator": "~1.2,>=1.2.1",
                 "monolog/monolog": "~1.11",
                 "ocramius/proxy-manager": "~0.4|~1.0|~2.0",
                 "phpdocumentor/reflection": "^1.0.7"
@@ -2162,7 +2099,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-06-06 16:05:37"
+            "time": "2016-06-30 15:42:24"
         },
         {
             "name": "twig/twig",
@@ -2229,7 +2166,7 @@
     "packages-dev": [
         {
             "name": "modera/foundation-bundle",
-            "version": "v1.1.2",
+            "version": "v2.0.0",
             "target-dir": "Modera/FoundationBundle",
             "source": {
                 "type": "git",
@@ -2814,16 +2751,16 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "7ae5513327cb536431847bcc0c10edba2701064e"
+                "reference": "42c4c2eec485ee3e159ec9884f95b431287edde4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/7ae5513327cb536431847bcc0c10edba2701064e",
-                "reference": "7ae5513327cb536431847bcc0c10edba2701064e",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/42c4c2eec485ee3e159ec9884f95b431287edde4",
+                "reference": "42c4c2eec485ee3e159ec9884f95b431287edde4",
                 "shasum": ""
             },
             "require": {
@@ -2831,12 +2768,13 @@
                 "sebastian/recursion-context": "~1.0"
             },
             "require-dev": {
+                "ext-mbstring": "*",
                 "phpunit/phpunit": "~4.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -2876,7 +2814,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2015-06-21 07:55:53"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/recursion-context",

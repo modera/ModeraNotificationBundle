@@ -11,5 +11,18 @@
 
             <argument type="service" id="doctrine" />
         </service>
+
+        <service id="modera_notification.dispatching.notification_center"
+                 class="Modera\NotificationBundle\Dispatching\NotificationCenter">
+
+            <argument type="service" id="modera_notification.dispatching.channel_registry_provider_adapter" />
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="modera_notification.dispatching.channel_registry_provider_adapter"
+                 class="Modera\NotificationBundle\Dispatching\ChannelRegistryProviderAdapter">
+
+            <argument type="service" id="modera_notification.channels_provider" />
+        </service>
     </services>
 </container>

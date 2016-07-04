@@ -1,6 +1,12 @@
 imports:
     - { resource: parameters.yml }
 
+services:
+    dummy_channel_provider:
+        class: Modera\NotificationBundle\Tests\Fixtures\Contributions\ChannelProvider
+        tags:
+            - { name: "modera_notification.channels_provider" }
+
 framework:
     secret:          Hell yeah!
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
