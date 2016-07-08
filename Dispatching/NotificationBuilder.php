@@ -11,6 +11,8 @@ namespace Modera\NotificationBundle\Dispatching;
 class NotificationBuilder
 {
     /**
+     * Names of channels which should be used to deliver given notification.
+     *
      * @var array
      */
     private $channels = [];
@@ -31,10 +33,30 @@ class NotificationBuilder
     private $meta = [];
 
     /**
+     * Instances of UserInterface who should receive the notification.
+     *
      * @var array
      */
     private $recipients = [];
 
+    /**
+     * @var bool
+     */
+    private $isExceptionThrownWhenChannelNotFound = false;
+
+    /**
+     * This property will store volatile runtime information that you may want to pass for channels to introspect
+     * when dispatching a notifications. Information stored in this property, for instance, might be used by channels
+     * to adjust their behaviour, it might contain some config that might be needed during dispatching but should
+     * not outlive the request-response cycle.
+     *
+     * @var array
+     */
+    private $context = array();
+
+    /**
+     * @var NotificationCenter
+     */
     private $notificationCenter;
 
     /**
@@ -53,7 +75,43 @@ class NotificationBuilder
     }
 
     /**
+     * @see throwExceptionWhenChannelNotFound()
+     *
+     * @return NotificationBuilder
+     */
+    public function suppressChannelNotFoundException()
+    {
+        $this->isExceptionThrownWhenChannelNotFound = false;
+
+        return $this;
+    }
+
+    /**
+     * By default if an unknown channel is specified through which a notification must be delivered then the notification
+     * center will will suppress the error, by invoking this method you will signal the notification center
+     * that an exception must be thrown instead in such cases.
+     *
+     * @return NotificationBuilder
+     */
+    public function throwExceptionWhenChannelNotFound()
+    {
+        $this->isExceptionThrownWhenChannelNotFound = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExceptionThrownWhenChannelNotFound()
+    {
+        return $this->isExceptionThrownWhenChannelNotFound;
+    }
+
+    /**
      * @param array $channels
+     *
+     * @return DeliveryReport
      */
     public function dispatch($channels = [])
     {
@@ -63,7 +121,7 @@ class NotificationBuilder
             $builder->setChannels($channels);
         }
 
-        $this->notificationCenter->dispatch($builder);
+        return $this->notificationCenter->dispatchUsingBuilder($builder);
     }
 
     /**
@@ -139,7 +197,32 @@ class NotificationBuilder
         return $this;
     }
 
+    /**
+     * @param string $propertyName
+     * @param mixed  $value
+     */
+    public function setContextProperty($propertyName, $value)
+    {
+        $this->context[$propertyName] = $value;
+    }
+
+    /**
+     * @param array $context
+     */
+    public function setContext(array $context)
+    {
+        $this->context = $context;
+    }
+
     // boilerplate:
+
+    /**
+     * @return array
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
 
     /**
      * @return array

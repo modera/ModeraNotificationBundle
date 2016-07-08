@@ -3,6 +3,7 @@
 namespace Modera\NotificationBundle\Tests\Functional\Dispatching;
 
 use Modera\NotificationBundle\Dispatching\ChannelNotFoundException;
+use Modera\NotificationBundle\Dispatching\DeliveryReport;
 use Modera\NotificationBundle\Dispatching\NotificationCenter;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Tests\Fixtures\Contributions\ChannelProvider;
@@ -55,9 +56,12 @@ class NotificationCenterTest extends AbstractDatabaseTest
         $this->assertSame($builder, $channel->dispatchInvocations[0][0]);
         $this->assertNotNull($channel->dispatchInvocations[0][1]);
 
-        $defId = $channel->dispatchInvocations[0][1];
+        /* @var DeliveryReport $report */
+        $report = $channel->dispatchInvocations[0][1];
+
+        $this->assertInstanceOf(DeliveryReport::class, $report);
         /* @var NotificationDefinition $def */
-        $def = $this->em()->find(NotificationDefinition::class, $defId);
+        $def = $this->em()->find(NotificationDefinition::class, $report->getDispatchResult());
 
         $this->assertInstanceOf(NotificationDefinition::class, $def);
         $this->assertEquals('hello world', $def->getMessage());
@@ -73,7 +77,7 @@ class NotificationCenterTest extends AbstractDatabaseTest
         $provider->items = [];
     }
 
-    public function dispatchWithChannelsSpecified()
+    public function testDispatchWithChannelsSpecified()
     {
         /* @var ChannelProvider $provider */
         $provider = self::$container->get('dummy_channel_provider');
@@ -107,8 +111,12 @@ class NotificationCenterTest extends AbstractDatabaseTest
         $this->assertEquals(1, count($channel3->dispatchInvocations));
     }
 
-    public function dispatchWithMissingChannel()
+    public function testDispatchWithMissingChannel()
     {
+        /* @var ChannelProvider $provider */
+        $provider = self::$container->get('dummy_channel_provider');
+        $provider->items = [];
+
         /* @var NotificationCenter $center */
         $center = self::$container->get('modera_notification.dispatching.notification_center');
 
@@ -122,6 +130,7 @@ class NotificationCenterTest extends AbstractDatabaseTest
             $builder = $center->createNotificationBuilder('hello world', 'test-group');
             $builder
                 ->setRecipients([$user1])
+                ->throwExceptionWhenChannelNotFound()
                 ->dispatch(['channel_1'])
             ;
         } catch (ChannelNotFoundException $e) {

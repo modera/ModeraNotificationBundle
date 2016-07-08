@@ -21,6 +21,7 @@ class ChannelNotFoundException extends \RuntimeException
     public static function create($channelId)
     {
         $me = new static(sprintf('Channel with ID "%s" is not found.', $channelId));
+        $me->channelId = $channelId;
 
         return $me;
     }

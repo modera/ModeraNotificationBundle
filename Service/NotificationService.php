@@ -24,7 +24,7 @@ class NotificationService
     /**
      * @var Registry
      */
-    private $doctrineRegistry;
+    protected $doctrineRegistry;
 
     /**
      * @param Registry $registry

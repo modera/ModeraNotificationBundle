@@ -2,6 +2,8 @@
 
 namespace Modera\NotificationBundle\Dispatching;
 
+use Doctrine\ORM\EntityManager;
+use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Service\NotificationService;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -21,6 +23,14 @@ class NotificationCenter extends NotificationService
         $this->channelRegistry = $channelRegistry;
 
         parent::__construct($doctrineRegistry);
+    }
+
+    /**
+     * @return ChannelRegistryInterface
+     */
+    public function getChannelRegistry()
+    {
+        return $this->channelRegistry;
     }
 
     /**
@@ -47,11 +57,24 @@ class NotificationCenter extends NotificationService
      *
      * @param NotificationBuilder $builder
      */
-    public function dispatch(NotificationBuilder $builder)
+    public function dispatchUsingBuilder(NotificationBuilder $builder)
     {
-        $dispatchResult = parent::dispatch(
-            $builder->getGroup(), $builder->getMessage(),$builder->getRecipients(), $builder->getMeta()
-        );
+        $def = new NotificationDefinition($builder->getMessage(), $builder->getGroup());
+        $def->setMeta($builder->getMeta());
+
+        foreach ($builder->getRecipients() as $user) {
+            $def->createInstance($user);
+        }
+
+        /* @var EntityManager $em */
+        $em = $this->doctrineRegistry->getManager();
+
+        $em->persist($def);
+        $em->flush();
+
+        $report = new DeliveryReport($builder, $def->getId(), function(array $metaToContribute) use($def) {
+            $def->setMeta(array_merge($def->getMeta(), $metaToContribute));
+        });
 
         $channels = [];
         if (count($builder->getChannels()) == 0) {
@@ -59,18 +82,25 @@ class NotificationCenter extends NotificationService
         } else {
             foreach ($builder->getChannels() as $id) {
                 $channel = $this->channelRegistry->getById($id);
-                if (!$channel) {
-                    throw ChannelNotFoundException::create($id);
+                if ($channel) {
+                    if ($channel->canHandle($builder, $report)) {
+                        $channels[] = $channel;
+                    }
+                } else {
+                    if ($builder->isExceptionThrownWhenChannelNotFound()) {
+                        throw ChannelNotFoundException::create($id);
+                    }
                 }
-
-                $channels[] = $channel;
             }
         }
 
         foreach ($channels as $channel) {
-            $channel->dispatch($builder, $dispatchResult);
+            $channel->dispatch($builder, $report);
         }
 
-        return $dispatchResult;
+        // channels might want to update "meta" through given $report so we need to re-sync database
+        $em->flush($def);
+
+        return $report;
     }
 }

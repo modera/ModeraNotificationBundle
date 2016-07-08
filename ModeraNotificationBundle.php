@@ -19,27 +19,4 @@ class ModeraNotificationBundle extends Bundle
 
         $container->addCompilerPass($extensionPoint->createCompilerPass());
     }
-
-    public function test()
-    {
-        $notificationCenter = $this->get('notification_center');
-
-        $channels = [];
-
-        $notificationCenter->createBuilder('hello world', 'groupx')->dispatch();
-
-        /* @var NotificationBuilder $builder */
-        $builder = null;
-
-        $builder
-            ->setRecipients([])
-            ->addRecipient()
-            ->setMessage()
-            ->setGroup()
-            ->setChannels()
-            ->setMetaProperty('key', 'value')
-            ->setMeta()
-            ->dispatch($channels)
-        ;
-    }
 }
