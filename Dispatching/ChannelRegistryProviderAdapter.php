@@ -4,7 +4,6 @@ namespace Modera\NotificationBundle\Dispatching;
 
 use Sli\ExpanderBundle\Ext\ContributorInterface;
 
-
 /**
  * Uses extension point architecture to discover available channels.
  *
@@ -49,6 +48,6 @@ class ChannelRegistryProviderAdapter implements ChannelRegistryInterface
             }
         }
 
-        return null;
+        return;
     }
 }

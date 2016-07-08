@@ -72,7 +72,7 @@ class NotificationCenter extends NotificationService
         $em->persist($def);
         $em->flush();
 
-        $report = new DeliveryReport($builder, $def->getId(), function(array $metaToContribute) use($def) {
+        $report = new DeliveryReport($builder, $def->getId(), function (array $metaToContribute) use ($def) {
             $def->setMeta(array_merge($def->getMeta(), $metaToContribute));
         });
 

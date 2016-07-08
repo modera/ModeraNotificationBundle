@@ -28,7 +28,7 @@ class SendNotificationCommand extends ContainerAwareCommand
             ->addArgument('group', InputArgument::REQUIRED)
             ->addArgument('recipients', InputArgument::REQUIRED, 'IDs of user who to dispatch notification to, if * is provided the notification will be delivered to all users')
             ->addOption('channels', null, InputOption::VALUE_OPTIONAL, 'Channels to use to dispatch the notification, comma separated')
-            ->addOption('meta', null, InputOption::VALUE_IS_ARRAY|InputOption::VALUE_OPTIONAL)
+            ->addOption('meta', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL)
             ->setDescription('Allows to dispatch a notification right from console')
         ;
     }
@@ -53,7 +53,7 @@ class SendNotificationCommand extends ContainerAwareCommand
                 continue;
             }
 
-            list ($key, $value) = explode('=', $metaProperty);
+            list($key, $value) = explode('=', $metaProperty);
             $meta[$key] = $value;
         }
 
@@ -63,7 +63,7 @@ class SendNotificationCommand extends ContainerAwareCommand
             $recipients = $userRepository->findAll();
         } else {
             $recipients = $userRepository->findBy(array(
-                'id' => explode(', ', $recipientsArg)
+                'id' => explode(', ', $recipientsArg),
             ));
         }
 

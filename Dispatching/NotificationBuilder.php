@@ -63,8 +63,8 @@ class NotificationBuilder
      * @internal
      *
      * @param NotificationCenter $notificationCenter
-     * @param string $message
-     * @param string $group
+     * @param string             $message
+     * @param string             $group
      */
     public function __construct(NotificationCenter $notificationCenter, $message, $group)
     {

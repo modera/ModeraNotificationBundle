@@ -19,7 +19,7 @@ abstract class AbstractChannel implements ChannelInterface
     /**
      * Will return TRUE if $builder requested given channel to be used and it has not been used
      * yet before (this might happen when one physical class is responsible for handling several
-     * virtual channels, for example - backend.desktop, backend.title ...)
+     * virtual channels, for example - backend.desktop, backend.title ...).
      *
      * {@inheritdoc}
      */
@@ -31,7 +31,6 @@ abstract class AbstractChannel implements ChannelInterface
 
         foreach (array_merge([$this->getId()], $this->getAliases()) as $id) {
             if (in_array($id, $builder->getChannels())) {
-
                 return true;
             }
         }

@@ -75,8 +75,8 @@ final class DeliveryReport
 
     /**
      * @param ChannelInterface|ChannelInterface[]|string|string[] $channel
-     * @param string $message
-     * @param mixed $meta
+     * @param string                                              $message
+     * @param mixed                                               $meta
      */
     public function markDelivered($channel, $message = null, $meta = null)
     {
@@ -91,8 +91,8 @@ final class DeliveryReport
 
     /**
      * @param ChannelInterface|ChannelInterface[]|string|string[] $channel
-     * @param mixed $error
-     * @param mixed $meta
+     * @param mixed                                               $error
+     * @param mixed                                               $meta
      */
     public function markFailed($channel, $error = null, $meta = null)
     {
@@ -114,7 +114,6 @@ final class DeliveryReport
             $channelInstance = is_string($iteratedChannel) ? $this->getChannelRegistry()->getById($iteratedChannel) : $iteratedChannel;
 
             $result[] = $channelInstance;
-
         }
 
         return $result;

@@ -37,7 +37,7 @@ interface ChannelInterface
      * Must dispatch a notification through a medium that this channel is responsible for.
      *
      * @param NotificationBuilder $builder
-     * @param DeliveryReport $report
+     * @param DeliveryReport      $report
      *
      * @return string
      */
