@@ -13,6 +13,8 @@ namespace Modera\NotificationBundle\Dispatching;
 interface ChannelInterface
 {
     /**
+     * A unique ID that can be used to identify a channel.
+     *
      * @return string
      */
     public function getId();
@@ -23,15 +25,6 @@ interface ChannelInterface
      * @return string
      */
     public function getAliases();
-
-    /**
-     * Method decides if the given channel is able to handle a configured notification.
-     *
-     * @param NotificationBuilder $builder
-     *
-     * @return mixed
-     */
-    public function canHandle(NotificationBuilder $builder, DeliveryReport $report);
 
     /**
      * Must dispatch a notification through a medium that this channel is responsible for.

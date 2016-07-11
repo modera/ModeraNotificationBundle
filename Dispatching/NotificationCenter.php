@@ -59,6 +59,22 @@ class NotificationCenter extends NotificationService
      */
     public function dispatchUsingBuilder(NotificationBuilder $builder)
     {
+        $channels = [];
+        if (count($builder->getChannels()) == 0) {
+            $channels = $this->channelRegistry->all();
+        } else {
+            foreach ($builder->getChannels() as $id) {
+                $channel = $this->channelRegistry->getById($id);
+                if ($channel) {
+                    $channels[] = $channel;
+                } else {
+                    if ($builder->isExceptionThrownWhenChannelNotFound()) {
+                        throw ChannelNotFoundException::create($id);
+                    }
+                }
+            }
+        }
+
         $def = new NotificationDefinition($builder->getMessage(), $builder->getGroup());
         $def->setMeta($builder->getMeta());
 
@@ -75,24 +91,6 @@ class NotificationCenter extends NotificationService
         $report = new DeliveryReport($builder, $def->getId(), function (array $metaToContribute) use ($def) {
             $def->setMeta(array_merge($def->getMeta(), $metaToContribute));
         });
-
-        $channels = [];
-        if (count($builder->getChannels()) == 0) {
-            $channels = $this->channelRegistry->all();
-        } else {
-            foreach ($builder->getChannels() as $id) {
-                $channel = $this->channelRegistry->getById($id);
-                if ($channel) {
-                    if ($channel->canHandle($builder, $report)) {
-                        $channels[] = $channel;
-                    }
-                } else {
-                    if ($builder->isExceptionThrownWhenChannelNotFound()) {
-                        throw ChannelNotFoundException::create($id);
-                    }
-                }
-            }
-        }
 
         foreach ($channels as $channel) {
             $channel->dispatch($builder, $report);

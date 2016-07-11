@@ -17,6 +17,9 @@ use Modera\NotificationBundle\Tests\Functional\AbstractDatabaseTest;
  */
 class NotificationCenterTest extends AbstractDatabaseTest
 {
+    /**
+     * @group zhopa
+     */
     public function testCreateNotificationBuilder()
     {
         /* @var ChannelProvider $provider */
@@ -44,13 +47,23 @@ class NotificationCenterTest extends AbstractDatabaseTest
         self::$em->flush();
 
         $builder = $center->createNotificationBuilder('hello world', 'test-group');
-        $builder
+        $report = $builder
             ->setRecipients([$user1, $user2])
             ->addRecipient($user3)
             ->setMeta(array('foo_key' => 'foo_val'))
             ->setMetaProperty('bar_key', 'bar_val')
             ->dispatch()
         ;
+
+        if ($report->isSuccessful()) {
+            echo "Everything's good, it seems all channel managed to deliver a notification.";
+        } else {
+            foreach ($report->getFailedDeliveries() as $info) {
+                echo sprintf("%s: failed to deliver a notification, error: ", $info['channel']->getId(), $info['error']);
+                echo $info['meta'] ? print_r($info['meta'], true) : 'No meta-information provided';
+                echo "\n";
+            }
+        }
 
         $this->assertEquals(1, count($channel->dispatchInvocations));
         $this->assertSame($builder, $channel->dispatchInvocations[0][0]);

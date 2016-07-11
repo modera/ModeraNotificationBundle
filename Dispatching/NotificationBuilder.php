@@ -3,6 +3,9 @@
 namespace Modera\NotificationBundle\Dispatching;
 
 /**
+ * Instances of this class are to be used to configure a notification that should be dispatched
+ * through channels registered in a notification center.
+ *
  * Use NotificationCenter::createNotificationBuilder() to create instances of this class.
  *
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
@@ -18,16 +21,26 @@ class NotificationBuilder
     private $channels = [];
 
     /**
+     * Contents of the message itself.
+     *
      * @var string
      */
     private $message;
 
     /**
+     * Used to group similar messages together. Think of a chat, it is very likely that you will want
+     * to group messages from a single user together, this property can used to tell the system
+     * how the notifications can be grouped and for the chat example it could look something
+     * like - chat:1, where a number is ID of a user from the messages are received from.
+     *
      * @var string
      */
     private $group;
 
     /**
+     * An optional meta-information that you want to be stored in a database, when a notification is dispatched
+     * through channels they will be able to access value of this property.
+     *
      * @var array
      */
     private $meta = [];
@@ -40,6 +53,9 @@ class NotificationBuilder
     private $recipients = [];
 
     /**
+     * It this property is set to TRUE and one of the channels you have specified that you want to use to deliver
+     * a notification is not found then an exception will be thrown.
+     *
      * @var bool
      */
     private $isExceptionThrownWhenChannelNotFound = false;
@@ -126,6 +142,8 @@ class NotificationBuilder
 
     /**
      * @param array $recipients
+     *
+     * @return NotificationBuilder
      */
     public function setRecipients(array $recipients)
     {
@@ -136,6 +154,8 @@ class NotificationBuilder
 
     /**
      * @param mixed $recipient
+     *
+     * @return NotificationBuilder
      */
     public function addRecipient($recipient)
     {
@@ -148,7 +168,7 @@ class NotificationBuilder
      * @param string $propertyName
      * @param string $value
      *
-     * @return static
+     * @return NotificationBuilder
      */
     public function setMetaProperty($propertyName, $value)
     {
@@ -159,6 +179,8 @@ class NotificationBuilder
 
     /**
      * @param array $meta
+     *
+     * @return NotificationBuilder
      */
     public function setMeta(array $meta)
     {
@@ -169,6 +191,8 @@ class NotificationBuilder
 
     /**
      * @param string $group
+     *
+     * @return NotificationBuilder
      */
     public function setGroup($group)
     {
@@ -179,6 +203,8 @@ class NotificationBuilder
 
     /**
      * @param string $message
+     *
+     * @return NotificationBuilder
      */
     public function setMessage($message)
     {
@@ -189,6 +215,8 @@ class NotificationBuilder
 
     /**
      * @param array $channels
+     *
+     * @return NotificationBuilder
      */
     public function setChannels($channels)
     {
@@ -200,18 +228,26 @@ class NotificationBuilder
     /**
      * @param string $propertyName
      * @param mixed  $value
+     *
+     * @return NotificationBuilder
      */
     public function setContextProperty($propertyName, $value)
     {
         $this->context[$propertyName] = $value;
+
+        return $this;
     }
 
     /**
      * @param array $context
+     *
+     * @return NotificationBuilder
      */
     public function setContext(array $context)
     {
         $this->context = $context;
+
+        return $this;
     }
 
     // boilerplate:

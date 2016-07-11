@@ -3,6 +3,12 @@
 namespace Modera\NotificationBundle\Dispatching;
 
 /**
+ * This class has two responsibilities:
+ * - in your application logic you can use it to introspect statuses which channels have successfully delivered
+ * a notification and which have failed
+ * - when you are creating your custom channel you can use instance of this class to report if a notification
+ * has been successfully delivered or there was a problem
+ *
  * Instance of this class is only meant to be manipulated from dispatch() method of notification channels.
  *
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
@@ -39,7 +45,7 @@ final class DeliveryReport
      * @internal
      *
      * @param NotificationBuilder $notificationBuilder
-     * @param $dispatchResult
+     * @param mixed $dispatchResult
      * @param callable $metaContributorCallback
      */
     public function __construct(NotificationBuilder $notificationBuilder, $dispatchResult, callable $metaContributorCallback)
@@ -74,6 +80,8 @@ final class DeliveryReport
     }
 
     /**
+     * Is meant to be used only inside ChannelInterface interface implementations.
+     *
      * @param ChannelInterface|ChannelInterface[]|string|string[] $channel
      * @param string                                              $message
      * @param mixed                                               $meta
@@ -90,6 +98,8 @@ final class DeliveryReport
     }
 
     /**
+     * Is meant to be used only inside ChannelInterface interface implementations.
+     *
      * @param ChannelInterface|ChannelInterface[]|string|string[] $channel
      * @param mixed                                               $error
      * @param mixed                                               $meta
@@ -105,6 +115,11 @@ final class DeliveryReport
         }
     }
 
+    /**
+     * @param $channel
+     *
+     * @return array
+     */
     private function resolveChannelArg($channel)
     {
         $channels = is_array($channel) ? $channel : [$channel];
@@ -136,6 +151,8 @@ final class DeliveryReport
     }
 
     /**
+     * @see getFailedDeliveries()
+     *
      * @return array
      */
     public function getErrors()
@@ -149,6 +166,14 @@ final class DeliveryReport
     public function getSuccessfulDeliveries()
     {
         return $this->successfulDeliveries;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFailedDeliveries()
+    {
+        return $this->failedDeliveries;
     }
 
     /**
