@@ -7,7 +7,7 @@ namespace Modera\NotificationBundle\Dispatching;
  * - in your application logic you can use it to introspect statuses which channels have successfully delivered
  * a notification and which have failed
  * - when you are creating your custom channel you can use instance of this class to report if a notification
- * has been successfully delivered or there was a problem
+ * has been successfully delivered or there was a problem.
  *
  * Instance of this class is only meant to be manipulated from dispatch() method of notification channels.
  *
@@ -45,8 +45,8 @@ final class DeliveryReport
      * @internal
      *
      * @param NotificationBuilder $notificationBuilder
-     * @param mixed $dispatchResult
-     * @param callable $metaContributorCallback
+     * @param mixed               $dispatchResult
+     * @param callable            $metaContributorCallback
      */
     public function __construct(NotificationBuilder $notificationBuilder, $dispatchResult, callable $metaContributorCallback)
     {

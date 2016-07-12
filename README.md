@@ -87,7 +87,7 @@ who should receive it, for this you can use either *addRecipient* or *setRecipie
 you need to provide implementations of UserInterface which we talked about in "Installation" section of this guide. Once
 you have configured your notification you can invoke *dispatch* method and notification will be attempted to be delivered
 through all registered channels because we neither used *setChannels* method which accepts list of channel IDs
-that must be used nor specified then when invoking *dispatch* method. Here's another example how you can send
+that must be used nor specified them when invoking *dispatch* method. Here's another example how you can send
 a notification while specifying which channels should be used:
 
     $notificationCenter->createNotificationBuilder('hello world', 'test-group');
@@ -117,8 +117,8 @@ two methods at your disposal - *setMeta* and *setMetaProperty*. First method all
 meta information stored in a specific notification-builder while second one - *setMetaProperty* can be used
 to specify one meta-property at time.
 
-Next method that we in our invocation chain is *setContextProperty*. While meta-information is stored in persistence
-storage with the notification's contents itself, context-properties will only during this specific request-response
+Next method that we have in our invocation chain is *setContextProperty*. While meta-information is stored in persistence
+storage with the notification's contents itself, context-properties will only live during this specific request-response
 server cycle. Usually you may want to use context properties to tweak a specific notification channel configuration
 properties that affect how a notification is delivered, but once a notification is delivered these details can be
 discarded.
@@ -170,8 +170,8 @@ environment.
 ### Cleaning up old notifications
 
 Whenever a new notification is dispatched a few records in database are created and when you have a massive deployment
-with a lost of users you eventually notifications database might grow and performance might start to degrade. In order
-to avoid that the bundle ships *modera:notification:clean-up* console command which you can use to to clean those
+with a lots of users your notifications database eventually might grow and performance might start to degrade. In order
+to address this issue the bundle ships *modera:notification:clean-up* console command which you can use to to clean those
 notifications which were already marked as read:
 
     app/console modera:notification:clean-up
@@ -186,13 +186,14 @@ environment, here is an example:
     app/console modera:notification:send-notification "Hello world" modera_backend_chat_notification_bridge "*"
 
 This is the bare minimum of configuration parameters that you need to pass in order to dispatch a notification, let's
-take a look at the parameters:
+take a look at them more closely:
 
  * "Hello world" - as you probably already guessed it contains contents of this notification
  * "modera_backend_chat_notification_bridge" - a group name, this value is used to group a similar notifications together,
- please refer to NotificationBuilder::$group for more details.
+ please refer to NotificationBuilder::$group for more details
  * "*" - third parameter accepts a list of user IDs who should receive a given notification, "*" in this case means
- that notifications will be dispatched to all users found in database
+ that notifications will be dispatched to all users found in database. List of user IDs must separated by a coma, for
+ example - 1,2,6
 
 Additionally there are two other parameters which we haven't yet shown, it is possible to specify channels which
 should be used to dispatch a notification as well as you have a chance to specify meta-keys that will be stored with given
@@ -201,10 +202,171 @@ notification. This is an example how you would specify that a notification shoul
 
     app/console modera:notification:send-notification "Hello world" modera_backend_chat_notification_bridge "*" --channels="email,sms" --meta="sender=john.doe@example.org"
 
+You can specify as many --meta configuration options as you want, the contents of this option is a string separated
+by an equal sign (=) where on left side is parameter name and on the right side its value.
 
 ## Architecture
 
-### Creating a custom channel
+The bundle has quite simple and straightforward architecture consisting of three components - a notifications center,
+channels and notification objects. The first one you have already seen in previous sections, as reminder, a notification
+class is represented by a *Modera\NotificationBundle\Dispatching\NotificationCenter*, this is the class whose API you will
+use in your application logic when adding support for delivering notifications. The second that we have slightly mentioned is far
+is "channel", which is represented by classes which implement *Modera\NotificationBundle\Dispatching\ChannelInterface*
+interface. In a nutshell a notification center when it is coming to delivering notification is responsible only
+for mitigating collaboration between channels that a developer has showed a desire to dispatch a notification through and storing
+notifications data in database but  all heavy lifting for delivering a notification through different mediums is taken
+care of in channels. The third component is notification object itself, which is represented by
+*Modera\NotificationBundle\Model\NotificationInterface*, this interface provides very generic and persistence technology
+agnostic API for reading notification details, methods *fetchBy* and *fetchOneBy* described in a next section return
+instances of this interface.
+
+### Notification center
+
+So far we have used only one method from NotificationCenter - *createNotificationCenter* but in fact there's another few
+ones that you can use to query and modify notifications:
+
+ * fetchBy, fetchOneBy - these two methods are used to query a notifications from a database, both methods accepts
+ so called "array query" which is in fact a very simplified syntax for building a query by using a simple
+ associative array. Please refer to methods API docs to see for a full list configuration properties. These
+ methods return instances of NotificationInterface. Example:
+
+    $notifications = $notificationCenter->fetchBy(array('group' => 'test', 'status' => NotificationInterface::STATUS_NOT_READ));
+
+ * changeStatus - method can be used to change status of notifications (mark some of the as READ, for instance). Method
+ accepts two parameters - a new status that notification must have and an "array query" describing which notifications
+ should be updated. Example:
+
+    $notificationCenter->changeStatus(NotificationInterface::STATUS_READ, array('group' => 'test'));
+
+### Channels & creating a channel
+
+As it was already mentioned in the previous section, channels are the ones who actually are responsible for doing
+the heavy lifting and eventually delivering a notification through a specific medium. The best way to understand
+how channels work is to create one and in this section we will create a very simple channel which will write
+dispatched notifications to Monolog logger.
+
+If you have already read previous sections then probably you remember that a channel is represented by ChannelInterface,
+this interface contains only a handful method and usually you still won't want to implement this interface directly but
+instead extend *Modera\NotificationBundle\Dispatching\AbstractChannel* which will have some methods implemented for you,
+but let's still take a moment and describe what the interface's methods do:
+
+ * getId - must return a unique ID which can be used to identify your channel, value returned by this method you will
+ be using when specifying which channels a notification should be delivered through using, for instance,
+ *NotificationBuilder*'s method *dispatch*.
+ * getAliases - an optional method that you may want to used to give other names to your channel. For example,
+ while you may have in *getId* returning "backend", then *getAliases* method could also return something like
+ "backend.title" or "backend.desktop*. This feature proves useful when your channels might have some "sub-channels".
+ * dispatch(NotificationBuilder $builder, DeliveryReport $report) - this method should contain logic which will
+ actually be responsible for delivering the notification, in other words this is the place where heavy lifting
+ actually happens. The method accepts two parameters - a notification builder which was used by a developer
+ to specify how the notification should be delivered, you can extract required details from the builder to configure
+ how a notification must be transported before it gets send through the channel, and second argument - $report
+ this is an object which is created internally by *NotificationBuilder::dispatch()* method, you can use this
+ object to report if your channel was able to successfully deliver a message or there was a problem, later a developer
+ is able to use this object to get feedback about delivery progress.
+
+Now that you know what channel's methods are let's write our custom channel, this is our Monolog channel's implementation
+(all comments are intentionally skipped here):
+
+    namespace Modera\NotificationBundle\Channels;
+
+    use Modera\NotificationBundle\Dispatching\AbstractChannel;
+    use Modera\NotificationBundle\Dispatching\DeliveryReport;
+    use Modera\NotificationBundle\Dispatching\NotificationBuilder;
+    use Psr\Log\LoggerInterface;
+    use Symfony\Component\Security\Core\User\UserInterface;
+
+    class MonologChannel extends AbstractChannel
+    {
+        private $logger;
+
+        public function __construct(LoggerInterface $logger)
+        {
+            $this->logger = $logger;
+        }
+
+        public function getId()
+        {
+            return 'monolog';
+        }
+
+        public function dispatch(NotificationBuilder $builder, DeliveryReport $report)
+        {
+            $usernames = [];
+            foreach ($builder->getRecipients() as $user) {
+                /* @var UserInterface $user */
+                $usernames[] = $user->getUsername();
+            }
+
+            try {
+                $message = sprintf(
+                    'Notification with contents "%s" dispatched for %d users: %s.',
+                    $builder->getMessage(),
+                    count($usernames),
+                    implode(', ', $usernames)
+                );
+
+                $this->logger->info($message, $builder->getMeta());
+
+                $report->markDelivered($this);
+            } catch (\Exception $e) {
+                $report->markFailed($this, $e->getMessage());
+            }
+        }
+    }
+
+The channel's implementation is pretty much self-explanatory, the only thing that I want you to pay attention is how
+we invoke *$report*'s *markDelivered* and *markFailed* method depending if channel has succeeded or not. Once channel
+is created there is one more step we need to complete to make our notification center see that there's a new channel
+is available. For this to happen we need to create a contribution to **modera_notification.channels** extension-point:
+
+    namespace Modera\NotificationBundle\Contributions;
+
+    use Modera\NotificationBundle\Dispatching\ChannelInterface;
+    use Sli\ExpanderBundle\Ext\ContributorInterface;
+    use Symfony\Component\DependencyInjection\ContainerInterface;
+    use Modera\NotificationBundle\Channels\MonologChannel;
+
+    class ChannelsProvider implements ContributorInterface
+    {
+        private $container;
+
+        private $channels;
+
+        public function __construct(ContainerInterface $container)
+        {
+            $this->container = $container;
+        }
+
+        public function getItems()
+        {
+            if (!$this->channels) {
+                $this->channels = [
+                    new MonologChannel($this->container->get('logger'))
+                ];
+            }
+
+            return $this->channels;
+        }
+    }
+
+And register our contributor class in dependency injection container:
+
+    <service id="modera_notification.contributions.channels_provider"
+             class="Modera\NotificationBundle\Contributions\ChannelsProvider">
+
+        <argument type="service" id="service_container" />
+
+        <tag name="modera_notification.channels_provider" />
+    </service>
+
+As of now if you try to dispatch a new notification then the notification channel should be able to discover
+our monolog channel and to use it as well to deliver notifications, you can try it yourself by running in console
+something like:
+
+    echo "" > app/logs/dev.log && app/console modera:notification:send-notification "hello test" test_group "*"
+
+And then checking contents of *app/logs/dev.log* file.
 
 ## Licensing
 

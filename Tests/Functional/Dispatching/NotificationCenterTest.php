@@ -59,7 +59,7 @@ class NotificationCenterTest extends AbstractDatabaseTest
             echo "Everything's good, it seems all channel managed to deliver a notification.";
         } else {
             foreach ($report->getFailedDeliveries() as $info) {
-                echo sprintf("%s: failed to deliver a notification, error: ", $info['channel']->getId(), $info['error']);
+                echo sprintf('%s: failed to deliver a notification, error: ', $info['channel']->getId(), $info['error']);
                 echo $info['meta'] ? print_r($info['meta'], true) : 'No meta-information provided';
                 echo "\n";
             }
