@@ -38,9 +38,7 @@ class ChannelsProvider implements ContributorInterface
         if (!$this->channels) {
             $this->channels = [];
 
-            $env = $this->container->getParameter('kernel.environment');
-
-            if (in_array(strtolower($env), ['dev', 'test'])) {
+            if ($this->container->has('modera_notification.channels.monolog_channel')) {
                 $this->channels[] = $this->container->get('modera_notification.channels.monolog_channel');
             }
         }

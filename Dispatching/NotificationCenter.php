@@ -16,8 +16,15 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class NotificationCenter extends NotificationService
 {
+    /**
+     * @var ChannelRegistryInterface
+     */
     private $channelRegistry;
 
+    /**
+     * @param ChannelRegistryInterface $channelRegistry
+     * @param RegistryInterface        $doctrineRegistry
+     */
     public function __construct(ChannelRegistryInterface $channelRegistry, RegistryInterface $doctrineRegistry)
     {
         $this->channelRegistry = $channelRegistry;

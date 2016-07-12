@@ -55,16 +55,6 @@ class NotificationCenterTest extends AbstractDatabaseTest
             ->dispatch()
         ;
 
-        if ($report->isSuccessful()) {
-            echo "Everything's good, it seems all channel managed to deliver a notification.";
-        } else {
-            foreach ($report->getFailedDeliveries() as $info) {
-                echo sprintf('%s: failed to deliver a notification, error: ', $info['channel']->getId(), $info['error']);
-                echo $info['meta'] ? print_r($info['meta'], true) : 'No meta-information provided';
-                echo "\n";
-            }
-        }
-
         $this->assertEquals(1, count($channel->dispatchInvocations));
         $this->assertSame($builder, $channel->dispatchInvocations[0][0]);
         $this->assertNotNull($channel->dispatchInvocations[0][1]);

@@ -25,11 +25,10 @@
             <argument type="service" id="modera_notification.channels_provider" />
         </service>
 
-        <service id="modera_notification.channels.monolog_channel"
-                 class="Modera\NotificationBundle\Channels\MonologChannel">
-
-            <argument type="service" id="logger" />
-        </service>
+        <!--
+            "modera_notification.channels.monolog_channel" service is registered dynamically in
+            \Modera\NotificationBundle\DependencyInjection\Compiler\MonologChannelCompiler
+        -->
 
         <service id="modera_notification.contributions.channels_provider"
                  class="Modera\NotificationBundle\Contributions\ChannelsProvider">

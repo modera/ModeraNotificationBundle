@@ -191,7 +191,7 @@ take a look at them more closely:
  * "Hello world" - as you probably already guessed it contains contents of this notification
  * "modera_backend_chat_notification_bridge" - a group name, this value is used to group a similar notifications together,
  please refer to NotificationBuilder::$group for more details
- * "\*" - third parameter accepts a list of user IDs who should receive a given notification, "*" in this case means
+ * "\*" - third parameter accepts a list of user IDs who should receive a given notification, "\*" in this case means
  that notifications will be dispatched to all users found in database. List of user IDs must separated by a coma, for
  example - 1,2,6
 
