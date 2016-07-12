@@ -56,7 +56,8 @@ class DeliveryReportTest extends \PHPUnit_Framework_TestCase
         $report = new DeliveryReport(
             $mocks['notification_builder'],
             'foo',
-            function () {}
+            function () {
+            }
         );
 
         $this->assertFalse($report->isAlreadyHandled($mocks['channel']));
