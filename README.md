@@ -151,7 +151,7 @@ can use:
         }
     }
 
-Besides *isSuccessful* and *getFailedDeliveries* method there's another few you can use
+Besides *isSuccessful* and *getFailedDeliveries* methods there's another few you can use:
 
  * isFailed() - opposite of *isSuccessful*, will return TRUE is any of the channels deemed that it was unable
   to deliver a notification
@@ -169,8 +169,37 @@ environment.
 
 ### Cleaning up old notifications
 
-Whenever a new notification is dispatched a few records in database is created and when you have a big
-deployment ...
+Whenever a new notification is dispatched a few records in database are created and when you have a massive deployment
+with a lost of users you eventually notifications database might grow and performance might start to degrade. In order
+to avoid that the bundle ships *modera:notification:clean-up* console command which you can use to to clean those
+notifications which were already marked as read:
+
+    app/console modera:notification:clean-up
+
+### Dispatching a notification
+
+Sometimes during development you might want to emulate a notification being dispatched without writing
+required source manually, if this is the case then we got your covered, the bundle provides
+*modera:notification:send-notification* command which you can use to dispatch notifications from a console
+environment, here is an example:
+
+    app/console modera:notification:send-notification "Hello world" modera_backend_chat_notification_bridge "*"
+
+This is the bare minimum of configuration parameters that you need to pass in order to dispatch a notification, let's
+take a look at the parameters:
+
+ * "Hello world" - as you probably already guessed it contains contents of this notification
+ * "modera_backend_chat_notification_bridge" - a group name, this value is used to group a similar notifications together,
+ please refer to NotificationBuilder::$group for more details.
+ * "*" - third parameter accepts a list of user IDs who should receive a given notification, "*" in this case means
+ that notifications will be dispatched to all users found in database
+
+Additionally there are two other parameters which we haven't yet shown, it is possible to specify channels which
+should be used to dispatch a notification as well as you have a chance to specify meta-keys that will be stored with given
+notification. This is an example how you would specify that a notification should only be dispatched using
+"email", "sms" channels and contain "sender" meta-key:
+
+    app/console modera:notification:send-notification "Hello world" modera_backend_chat_notification_bridge "*" --channels="email,sms" --meta="sender=john.doe@example.org"
 
 
 ## Architecture
