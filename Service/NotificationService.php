@@ -67,9 +67,9 @@ class NotificationService
     /**
      * Finds all notifications by given $group/$user and changes their status to $newStatus.
      *
-     * Possible array query keys are: recipient (instance of UserInterface), group (string), id(int).
-     * By combining different keys you are able to change scope of notifications whose statuses are going
-     * to be updated.
+     * Possible array query keys are: recipient (instance of UserInterface), group (string), id(int, id of implementation
+     * of NotificationInterface). By combining different keys you are able to change scope of notifications whose
+     * statuses are going to be updated.
      *
      * @param int   $newStatus
      * @param array $arrayQuery
@@ -95,7 +95,7 @@ class NotificationService
 
         $filters = [];
         if ($hasId) {
-            $filters[] = 'def.id = ?'.count($queryParams);
+            $filters[] = 'inc.id = ?'.count($queryParams); // related to MPFE-942
             $queryParams[] = $arrayQuery['id'];
         }
         if ($hasRecipient) {
@@ -178,7 +178,8 @@ class NotificationService
     }
 
     /**
-     * Available query keys: ID (int), recipient (UserInterface).
+     * Available query keys: ID (int), recipient (UserInterface). Here we mean "id" of implementation
+     * of NotificationInterface, which represents a notification linked to a specific user.
      *
      * @throws \RuntimeException If more than one result is returned from persistence storage.
      *
@@ -194,6 +195,8 @@ class NotificationService
         $hasId = isset($arrayQuery['id']);
         $hasRecipient = isset($arrayQuery['recipient']);
 
+        // we fetch "definition" here to avoid issuing a separate query later if API user wants to
+        // read notification's content (which happens quite often)
         $querySegments = [
             sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
         ];
@@ -204,7 +207,7 @@ class NotificationService
         }
 
         if ($hasId) {
-            $querySegments[] = 'def.id = ?'.count($queryParams);
+            $querySegments[] = 'inc.id = ?'.count($queryParams); // used to be "def.id =", but caused a problem - MPFE-942
             $queryParams[] = $arrayQuery['id'];
         }
         if ($hasRecipient) {

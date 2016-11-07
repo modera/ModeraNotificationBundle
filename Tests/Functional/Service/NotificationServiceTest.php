@@ -73,7 +73,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $this->assertEquals($instance3FromDb->getStatus(), $fixtures['instances'][2]->getStatus()); // should not have been changed
     }
 
-    public function testChangeStatusByRecipientAndId()
+    public function testChangeStatusByRecipient()
     {
         /* @var NotificationService $service*/
         $service = self::$container->get('modera_notification.service.notification_service');
@@ -93,7 +93,6 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $newStatus = 777;
         $service->changeStatus($newStatus, array(
-            'id' => $def->getId(),
             'recipient' => $anotherUser,
         ));
 
@@ -119,7 +118,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $newStatus = 777;
         $service->changeStatus($newStatus, array(
-            'id' => $fixtures['instances'][0]->getDefinition()->getId(),
+            'id' => $fixtures['instances'][0]->getId(),
         ));
 
         self::$em->clear();
@@ -246,7 +245,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $fixtures = $this->loadFixtures();
 
         $notification = $service->fetchOneBy(array(
-            'id' => $fixtures['instances'][2]->getDefinition()->getId(),
+            'id' => $fixtures['instances'][2]->getId(),
             'recipient' => $fixtures['users'][1],
         ));
 
@@ -264,7 +263,6 @@ class NotificationServiceTest extends AbstractDatabaseTest
         $fixtures = $this->loadFixtures();
 
         $notification = $service->fetchOneBy(array(
-            'id' => $fixtures['instances'][0]->getDefinition()->getId(),
             'recipient' => $fixtures['users'][0],
         ));
 
