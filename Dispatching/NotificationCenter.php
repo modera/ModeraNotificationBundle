@@ -3,9 +3,13 @@
 namespace Modera\NotificationBundle\Dispatching;
 
 use Doctrine\ORM\EntityManager;
+use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
+use Modera\NotificationBundle\Entity\UserNotificationInstance;
+use Modera\NotificationBundle\Model\NotificationInterface;
 use Modera\NotificationBundle\Service\NotificationService;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Service provides basic routines for manipulating notifications - dispatching(creating), querying, batch changing
@@ -63,6 +67,8 @@ class NotificationCenter extends NotificationService
      * @throws ChannelNotFoundException
      *
      * @param NotificationBuilder $builder
+     *
+     * @return DeliveryReport
      */
     public function dispatchUsingBuilder(NotificationBuilder $builder)
     {
@@ -95,7 +101,7 @@ class NotificationCenter extends NotificationService
         $em->persist($def);
         $em->flush();
 
-        $report = new DeliveryReport($builder, $def->getId(), function (array $metaToContribute) use ($def) {
+        $report = new DeliveryReport($builder, UID::create($def), function (array $metaToContribute) use ($def) {
             $def->setMeta(array_merge($def->getMeta(), $metaToContribute));
         });
 

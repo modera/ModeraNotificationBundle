@@ -10,6 +10,7 @@ use Modera\NotificationBundle\Tests\Fixtures\Contributions\ChannelProvider;
 use Modera\NotificationBundle\Tests\Fixtures\Contributions\DummyChannel;
 use Modera\NotificationBundle\Tests\Fixtures\Entity\User;
 use Modera\NotificationBundle\Tests\Functional\AbstractDatabaseTest;
+use Modera\NotificationBundle\Transport\UID;
 
 /**
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
@@ -17,9 +18,6 @@ use Modera\NotificationBundle\Tests\Functional\AbstractDatabaseTest;
  */
 class NotificationCenterTest extends AbstractDatabaseTest
 {
-    /**
-     * @group zhopa
-     */
     public function testCreateNotificationBuilder()
     {
         /* @var ChannelProvider $provider */
@@ -64,7 +62,11 @@ class NotificationCenterTest extends AbstractDatabaseTest
 
         $this->assertInstanceOf(DeliveryReport::class, $report);
         /* @var NotificationDefinition $def */
-        $def = $this->em()->find(NotificationDefinition::class, $report->getDispatchResult());
+
+        /* @var UID $uid */
+        $uid = $report->getDispatchResult();
+
+        $def = $this->em()->find(NotificationDefinition::class, $uid->getNotification());
 
         $this->assertInstanceOf(NotificationDefinition::class, $def);
         $this->assertEquals('hello world', $def->getMessage());

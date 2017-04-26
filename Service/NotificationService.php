@@ -4,6 +4,8 @@ namespace Modera\NotificationBundle\Service;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Model\NotificationInterface;
@@ -230,6 +232,30 @@ class NotificationService
         }
 
         return $result[0];
+    }
+
+    /**
+     * @param UID $uid
+     * @param UserInterface $user
+     *
+     * @return NotificationInterface|null
+     */
+    public function fetchOneByUIDAndRecipient(UID $uid, UserInterface $user)
+    {
+        if ($uid->isGeneralized()) {
+            throw new \InvalidArgumentException("Non-generalized UID is expected.");
+        }
+
+        $repository = $this->doctrineRegistry->getRepository(UserNotificationInstance::clazz());
+
+        if ($uid->isUserSpecific()) {
+            return $repository->find($uid->getNotification());
+        } else {
+            return $repository->findOneBy(array(
+                'recipient' => $user,
+                'definition' => $uid->getNotification(),
+            ));
+        }
     }
 
     /**
