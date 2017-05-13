@@ -23,12 +23,10 @@ class NotificationCenterTest extends AbstractDatabaseTest
         /* @var ChannelProvider $provider */
         $provider = self::$container->get('dummy_channel_provider');
 
-        $prefix = uniqid();
-
-        $channel = new DummyChannel();
+        $channel = new DummyChannel('foo-channel');
 
         // using index because we are modifying a global instance which can be used by other tests as well
-        $channelIdKey = $prefix.'._1';
+        $channelIdKey = uniqid().'._1';
 
         $provider->items[$channelIdKey] = $channel;
 
@@ -45,7 +43,7 @@ class NotificationCenterTest extends AbstractDatabaseTest
         self::$em->flush();
 
         $builder = $center->createNotificationBuilder('hello world', 'test-group');
-        $report = $builder
+        $builder
             ->setRecipients([$user1, $user2])
             ->addRecipient($user3)
             ->setMeta(array('foo_key' => 'foo_val'))
@@ -79,6 +77,7 @@ class NotificationCenterTest extends AbstractDatabaseTest
         $this->assertArrayHasKey('bar_key', $meta);
         $this->assertEquals('bar_val', $meta['bar_key']);
 
+        // Because it might be used by other tests as well
         $provider->items = [];
     }
 
@@ -114,6 +113,36 @@ class NotificationCenterTest extends AbstractDatabaseTest
         $this->assertEquals(1, count($channel1->dispatchInvocations));
         $this->assertEquals(0, count($channel2->dispatchInvocations));
         $this->assertEquals(1, count($channel3->dispatchInvocations));
+    }
+
+    public function testDispatchWithDuplicateChannelsSpecified()
+    {
+        /* @var ChannelProvider $provider */
+        $provider = self::$container->get('dummy_channel_provider');
+
+        $channel1 = new DummyChannel('channel_1', ['channel_11', 'channel_111']);
+        $channel2 = new DummyChannel('channel_2');
+
+        $provider->items = [$channel1, $channel2];
+
+        /* @var NotificationCenter $center */
+        $center = self::$container->get('modera_notification.dispatching.notification_center');
+
+        $user1 = new User('bob');
+        $user2 = new User('jane');
+
+        self::$em->persist($user1);
+        self::$em->persist($user2);
+        self::$em->flush();
+
+        $builder = $center->createNotificationBuilder('hello world', 'test-group');
+        $builder
+            ->setRecipients([$user1, $user2])
+            ->dispatch(['channel_1', 'channel_3', 'channel_11', 'channel_111'])
+        ;
+
+        $this->assertEquals(1, count($channel1->dispatchInvocations));
+        $this->assertEquals(0, count($channel2->dispatchInvocations));
     }
 
     public function testDispatchWithMissingChannel()

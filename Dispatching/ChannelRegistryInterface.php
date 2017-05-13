@@ -25,4 +25,16 @@ interface ChannelRegistryInterface
      * @return ChannelInterface|null
      */
     public function getById($id);
+
+    /**
+     * @since 0.3.0
+     *
+     * Returned channels must be unique, that is - if there's a channel with several aliases,
+     * and those several aliases are given as $ids, then only one channel needs to be returned.
+     *
+     * @param mixed[] $ids
+     *
+     * @return ChannelInterface[]
+     */
+    public function getByIds(array $ids);
 }

@@ -86,6 +86,9 @@ class NotificationCenter extends NotificationService
                     }
                 }
             }
+
+            // One channel could have been added several times because of aliases
+            $channels = DuplicateChannelsFilterer::filter($channels, $builder->getChannels());
         }
 
         $def = new NotificationDefinition($builder->getMessage(), $builder->getGroup());

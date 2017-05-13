@@ -15,19 +15,30 @@ class DummyChannel extends AbstractChannel
 {
     public $id;
 
+    public $aliases = [];
+
     public $dispatchInvocations = [];
 
-    public function __construct($id = null)
+    public function __construct($id = null, $aliases = [])
     {
         $this->id = $id;
+        $this->aliases = $aliases;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAliases()
+    {
+        return $this->aliases;
     }
 
     /**

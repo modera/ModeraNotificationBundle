@@ -50,4 +50,12 @@ class ChannelRegistryProviderAdapter implements ChannelRegistryInterface
 
         return;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByIds(array $ids)
+    {
+        return DuplicateChannelsFilterer::filter($this->all(), $ids);
+    }
 }
