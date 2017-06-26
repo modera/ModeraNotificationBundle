@@ -54,7 +54,9 @@ class SendNotificationCommand extends ContainerAwareCommand
             }
 
             list($key, $value) = explode('=', $metaProperty);
-            $meta[$key] = $value;
+            
+            $decoded = json_decode($value, true);
+            $meta[$key] = json_last_error() == JSON_ERROR_NONE ? $decoded : $value;
         }
 
         $recipients = [];
