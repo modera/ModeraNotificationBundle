@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Entity
  * @ORM\Table(name="modera_notification_usernotificationinstance")
+ * @ORM\HasLifecycleCallbacks
  */
 class UserNotificationInstance implements NotificationInterface
 {
@@ -45,10 +46,28 @@ class UserNotificationInstance implements NotificationInterface
      */
     private $status = self::STATUS_NOT_READ;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $readAt;
+
     public function __construct(NotificationDefinition $definition, UserInterface $recipient)
     {
         $this->definition = $definition;
         $this->recipient = $recipient;
+        $this->createdAt = new \DateTime('now');
     }
 
     public static function clazz()
@@ -125,6 +144,43 @@ class UserNotificationInstance implements NotificationInterface
      */
     public function setStatus($status)
     {
+        if (!$this->readAt && $status == self::STATUS_READ) {
+            $this->readAt = new \DateTime('now');
+        }
+
         $this->status = $status;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return null|\DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return null|\DateTime
+     */
+    public function getReadAt()
+    {
+        return $this->readAt;
+    }
+
+    /**
+     * @private
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime('now');
     }
 }
