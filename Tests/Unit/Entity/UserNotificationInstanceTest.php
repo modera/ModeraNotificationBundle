@@ -5,7 +5,6 @@ namespace Modera\NotificationBundle\Tests\Unit\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @author    Sergei Vizel <sergei.vizel@modera.org>
