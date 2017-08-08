@@ -17,26 +17,36 @@ class UserNotificationInstanceTest extends AbstractDatabaseTest
     {
         $user = new User('john');
         $def = new NotificationDefinition('foo message', 'foo group');
+        $instance = $def->createInstance($user);
 
         self::$em->persist($user);
         self::$em->persist($def);
-        self::$em->flush();
-
-        $instance = $def->createInstance($user);
         self::$em->persist($instance);
         self::$em->flush();
+        self::$em->clear();
 
-        $this->assertInstanceOf('DateTime', $instance->getCreatedAt());
-        $this->assertNull($instance->getUpdatedAt());
-        $this->assertNull($instance->getReadAt());
-        $createdAt = $instance->getCreatedAt();
+        /* @var UserNotificationInstance $instanceFromDb*/
+        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $instance->getId());
 
-        $instance->setStatus(UserNotificationInstance::STATUS_READ);
+        $this->assertInstanceOf('DateTime', $instanceFromDb->getCreatedAt());
+        $this->assertNull($instanceFromDb->getUpdatedAt());
+        $this->assertNull($instanceFromDb->getReadAt());
+
+        $createdAt = $instanceFromDb->getCreatedAt();
+        $instanceFromDb->setStatus(UserNotificationInstance::STATUS_READ);
         self::$em->flush();
+        self::$em->clear();
 
-        $this->assertInstanceOf('DateTime', $instance->getCreatedAt());
-        $this->assertEquals($createdAt, $instance->getCreatedAt());
-        $this->assertInstanceOf('DateTime', $instance->getUpdatedAt());
-        $this->assertInstanceOf('DateTime', $instance->getReadAt());
+        $updatedAt = $instanceFromDb->getUpdatedAt();
+        $readAt = $instanceFromDb->getReadAt();
+        /* @var UserNotificationInstance $instanceFromDb*/
+        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $instance->getId());
+
+        $this->assertInstanceOf('DateTime', $instanceFromDb->getCreatedAt());
+        $this->assertEquals($createdAt, $instanceFromDb->getCreatedAt());
+        $this->assertInstanceOf('DateTime', $instanceFromDb->getUpdatedAt());
+        $this->assertEquals($updatedAt, $instanceFromDb->getUpdatedAt());
+        $this->assertInstanceOf('DateTime', $instanceFromDb->getReadAt());
+        $this->assertEquals($readAt, $instanceFromDb->getReadAt());
     }
 }
