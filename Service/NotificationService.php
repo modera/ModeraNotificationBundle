@@ -82,20 +82,21 @@ class NotificationService
         $em = $this->doctrineRegistry->getManager();
 
         $querySegments = [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc.id, inc.readAt FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
         ];
-        $queryParams = [];
 
         $hasId = isset($arrayQuery['id']);
         $hasRecipient = isset($arrayQuery['recipient']);
+        $hasRecipients = isset($arrayQuery['recipients']) && is_array($arrayQuery['recipients']) && count($arrayQuery['recipients']) > 0;
         $hasGroup = isset($arrayQuery['group']);
-        $hasQuery = $hasId || $hasRecipient || $hasGroup;
-
-        if ($hasQuery) {
-            $querySegments[] = 'WHERE ';
-        }
 
         $filters = [];
+        $queryParams = [];
+
+        $querySegments[] = 'WHERE ';
+        $filters[] = 'inc.status != ?'.count($queryParams);
+        $queryParams[] = $newStatus;
+
         if ($hasId) {
             $filters[] = 'inc.id = ?'.count($queryParams); // related to MPFE-942
             $queryParams[] = $arrayQuery['id'];
@@ -103,6 +104,10 @@ class NotificationService
         if ($hasRecipient) {
             $filters[] = 'inc.recipient = ?'.count($queryParams);
             $queryParams[] = $arrayQuery['recipient'];
+        }
+        if ($hasRecipients) {
+            $filters[] = sprintf('inc.recipient IN (?%d)', count($queryParams));
+            $queryParams[] = $arrayQuery['recipients'];
         }
         if ($hasGroup) {
             $filters[] = 'def.groupName = ?'.count($queryParams);
@@ -113,12 +118,25 @@ class NotificationService
         $query = $em->createQuery($query);
         $query->setParameters($queryParams);
 
-        foreach ($query->getResult() as $instance) {
-            /* @var UserNotificationInstance $instance*/
-            $instance->setStatus($newStatus);
-        }
+        foreach ($query->getResult($query::HYDRATE_ARRAY) as $instance) {
+            $set = [
+                'inc.status = :status',
+                'inc.updatedAt = CURRENT_TIMESTAMP()',
+            ];
+            if (!$instance['readAt'] && $newStatus == UserNotificationInstance::STATUS_READ) {
+                $set[] = 'inc.readAt = CURRENT_TIMESTAMP()';
+            }
 
-        $em->flush();
+            $query = $em->createQuery(
+                sprintf(
+                    'UPDATE %s inc SET ' . join(', ', $set) . ' WHERE inc.id = :id',
+                    UserNotificationInstance::clazz()
+                )
+            );
+            $query->setParameter('status', $newStatus);
+            $query->setParameter('id', $instance['id']);
+            $query->execute();
+        }
     }
 
     /**
@@ -261,9 +279,9 @@ class NotificationService
     /**
      * Saves/updates notification.
      *
-     * @param object object
+     * @param NotificationInterface $notification
      */
-    public function save($notification)
+    public function save(NotificationInterface $notification)
     {
         /* @var EntityManager $em */
         $em = $this->doctrineRegistry->getManager();
