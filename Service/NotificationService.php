@@ -2,9 +2,9 @@
 
 namespace Modera\NotificationBundle\Service;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
@@ -153,10 +153,11 @@ class NotificationService
      * If none of parameters is provided then all available notifications will be fetched.
      *
      * @param array $arrayQuery
+     * @param int   $hydrationMode
      *
      * @return NotificationInterface[]
      */
-    public function fetchBy(array $arrayQuery)
+    public function fetchBy(array $arrayQuery, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
     {
         /* @var EntityManager $em */
         $em = $this->doctrineRegistry->getManager();
@@ -185,7 +186,7 @@ class NotificationService
         }
 
         $query = implode(' ', [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
             count($whereSegments) > 0 ? 'WHERE' : '',
             implode(' AND ', $whereSegments),
             'ORDER BY inc.id',
@@ -194,7 +195,7 @@ class NotificationService
         $query = $em->createQuery($query);
         $query->setParameters($queryParams);
 
-        return $query->getResult();
+        return $query->getResult($hydrationMode);
     }
 
     /**
@@ -204,25 +205,27 @@ class NotificationService
      * @throws \RuntimeException If more than one result is returned from persistence storage.
      *
      * @param array $arrayQuery
+     * @param int   $hydrationMode
      *
      * @return NotificationInterface|null NULL is returned when no notification is found
      */
-    public function fetchOneBy(array $arrayQuery)
+    public function fetchOneBy(array $arrayQuery, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
     {
         /* @var EntityManager $em */
         $em = $this->doctrineRegistry->getManager();
 
         $hasId = isset($arrayQuery['id']);
         $hasRecipient = isset($arrayQuery['recipient']);
+        $hasDefinition = isset($arrayQuery['definition']);
 
         // we fetch "definition" here to avoid issuing a separate query later if API user wants to
         // read notification's content (which happens quite often)
         $querySegments = [
-            sprintf('SELECT inc FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
         ];
         $queryParams = [];
 
-        if ($hasId || $hasRecipient) {
+        if ($hasId || $hasRecipient || $hasDefinition) {
             $querySegments[] = 'WHERE';
         }
 
@@ -238,11 +241,19 @@ class NotificationService
             $querySegments[] = sprintf('inc.recipient IN (?%d)', count($queryParams));
             $queryParams[] = [$arrayQuery['recipient']];
         }
+        if ($hasDefinition) {
+            if ($hasId || $hasRecipient) {
+                $querySegments[] = 'AND';
+            }
+
+            $querySegments[] = 'inc.definition = ?'.count($queryParams);
+            $queryParams[] = [$arrayQuery['definition']];
+        }
 
         $query = $em->createQuery(implode(' ', $querySegments));
         $query->setParameters($queryParams);
 
-        $result = $query->getResult();
+        $result = $query->getResult($hydrationMode);
         if (count($result) > 1) {
             throw new \RuntimeException('More than one notification returned for query: '.json_encode($arrayQuery));
         } elseif (count($result) == 0) {
@@ -253,27 +264,48 @@ class NotificationService
     }
 
     /**
-     * @param UID $uid
+     * @param UID           $uid
      * @param UserInterface $user
+     * @param int           $hydrationMode
      *
      * @return NotificationInterface|null
      */
-    public function fetchOneByUIDAndRecipient(UID $uid, UserInterface $user)
+    public function fetchOneByUIDAndRecipient(UID $uid, UserInterface $user, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
     {
         if ($uid->isGeneralized()) {
             throw new \InvalidArgumentException("Non-generalized UID is expected.");
         }
 
-        $repository = $this->doctrineRegistry->getRepository(UserNotificationInstance::clazz());
-
         if ($uid->isUserSpecific()) {
-            return $repository->find($uid->getNotification());
+            return $this->fetchOneBy(array(
+                'id' => $uid->getNotification(),
+            ), $hydrationMode);
         } else {
-            return $repository->findOneBy(array(
+            return $this->fetchOneBy(array(
                 'recipient' => $user,
                 'definition' => $uid->getNotification(),
-            ));
+            ), $hydrationMode);
         }
+    }
+
+    /**
+     * @param int           $newStatus
+     * @param UID           $uid
+     * @param UserInterface $user
+     */
+    public function changeStatusByUIDAndRecipient($newStatus, UID $uid, UserInterface $user)
+    {
+        $arrayQuery = array(
+            'recipient' => $user,
+        );
+
+        if ($uid->isGeneralized()) {
+            $arrayQuery['group'] =  $uid->getGroup();
+        } else {
+            $arrayQuery['id'] =  $uid->getNotification();
+        }
+
+        $this->changeStatus($newStatus, $arrayQuery);
     }
 
     /**
