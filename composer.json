@@ -4,19 +4,17 @@
     "description": "Provides functionality to store/retrieve notifications.",
     "license": "MIT",
     "require": {
-        "php": ">=5.4.0",
-
-        "modera/module-bundle": "~1.0|~2.0",
-
+        "php": ">=5.6",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.4",
-        "symfony/symfony": "~2.3",
+        "symfony/framework-bundle": "~2.3|^3.0",
+        "modera/module-bundle": "~1.0|~2.0|~3.0",
         "sergeil/expander-bundle": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
         "phake/phake": "~2.0",
-        "modera/foundation-bundle": "~1.0|~2.0",
+        "phpunit/phpunit": "3.7.*",
+        "modera/foundation-bundle": "~1.0|~2.0|~3.0",
         "sergeil/aux-bundle": "~1.0"
     },
     "authors": [
