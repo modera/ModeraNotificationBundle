@@ -38,6 +38,11 @@ class NotificationBuilder
     private $group;
 
     /**
+     * @var \DateTime
+     */
+    private $lifetime;
+
+    /**
      * An optional meta-information that you want to be stored in a database, when a notification is dispatched
      * through channels they will be able to access value of this property.
      *
@@ -88,6 +93,7 @@ class NotificationBuilder
 
         $this->message = $message;
         $this->group = $group;
+        $this->lifetime = new \DateTime('now + 14 days');
     }
 
     /**
@@ -199,6 +205,26 @@ class NotificationBuilder
         $this->group = $group;
 
         return $this;
+    }
+
+    /**
+     * @param \DateTime|null $lifetime
+     *
+     * @return NotificationBuilder
+     */
+    public function setLifetime(\DateTime $lifetime = null)
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLifetime()
+    {
+        return $this->lifetime;
     }
 
     /**

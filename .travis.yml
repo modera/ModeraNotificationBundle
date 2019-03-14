@@ -10,7 +10,9 @@ env:
 php:
   - 5.6
   - 7.0
+  - 7.1
+  - 7.2
 
 before_script:
-  - composer install
+  - COMPOSER_MEMORY_LIMIT=-1 composer update
   - mysql -e 'CREATE DATABASE modera_notificationsbundle'

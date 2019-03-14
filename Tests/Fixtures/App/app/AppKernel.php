@@ -8,14 +8,12 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         return array(
-            new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new \Sli\AuxBundle\SliAuxBundle(),
+            new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Modera\FoundationBundle\ModeraFoundationBundle(),
+            new Sli\AuxBundle\SliAuxBundle(),
 
-            new \Modera\FoundationBundle\ModeraFoundationBundle(),
-
-            new \Modera\NotificationBundle\ModeraNotificationBundle(),
+            new Modera\NotificationBundle\ModeraNotificationBundle(),
         );
     }
 

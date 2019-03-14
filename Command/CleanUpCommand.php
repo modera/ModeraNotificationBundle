@@ -2,19 +2,16 @@
 
 namespace Modera\NotificationBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
-use Modera\NotificationBundle\Entity\NotificationDefinition;
-use Modera\NotificationBundle\Entity\UserNotificationInstance;
-use Modera\NotificationBundle\Model\NotificationInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Modera\NotificationBundle\Entity\UserNotificationInstance;
+use Modera\NotificationBundle\Entity\NotificationDefinition;
 
 /**
- * @author    Sergei Lissovski <sergei.lissovski@modera.org>
- * @copyright 2015 Modera Foundation
+ * @author    Sergei Vizel <sergei.vizel@modera.org>
+ * @copyright 2019 Modera Foundation
  */
 class CleanUpCommand extends ContainerAwareCommand
 {
@@ -25,14 +22,7 @@ class CleanUpCommand extends ContainerAwareCommand
     {
         $this
             ->setName('modera:notification:clean-up')
-            ->setDescription('Allows to clean up a database from notifications which have READ status.')
-            ->addOption(
-                'batch-size',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'How many notifications to fetch from a database at a time.',
-                100
-            )
+            ->setDescription('Allows to clean up a database from notifications which not needed any more.')
         ;
     }
 
@@ -41,75 +31,63 @@ class CleanUpCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // By fetching and hydrating entities we guarantee that ORM
-        // listeners will be invoked as well (if any)
+        $now = new \DateTime('now');
 
-        /* @var Registry $registry*/
-        $registry = $this->getContainer()->get('doctrine');
-        /* @var EntityManager $em */
-        $em = $registry->getManager();
+        $removed = (int) $this->em()->createQuery(sprintf(
+            implode(' ', array(
+                'SELECT COUNT(ni.id) FROM %s n',
+                'LEFT JOIN %s ni WITH ni.definition = n.id',
+                'WHERE n.lifetime IS NOT NULL AND n.lifetime <= :date',
+            )),
+            NotificationDefinition::clazz(),
+            UserNotificationInstance::clazz()
+        ))->setParameter('date', $now)->getSingleScalarResult();
 
-        $batchSize = $input->getOption('batch-size');
+        $removedDefinitions = $this->em()->createQuery(sprintf(
+            'DELETE FROM %s n WHERE n.lifetime IS NOT NULL AND n.lifetime <= :date',
+            NotificationDefinition::clazz()
+        ))->setParameter('date', $now)->execute();
 
-        $definitionsIds = [];
-        $removedCount = 0;
+        $removed += $this->em()->createQuery(sprintf(
+            'DELETE FROM %s ni WHERE ni.status = :status',
+            UserNotificationInstance::clazz()
+        ))->setParameter('status', UserNotificationInstance::STATUS_READ)->execute();
 
-        $instances = [];
-        do {
-            $query = $em->createQuery(sprintf(
-                'SELECT def, ni FROM %s ni LEFT JOIN ni.definition def WHERE ni.status = ?0 ORDER BY ni.definition ASC',
-                UserNotificationInstance::clazz()
-            ));
-            $query->setParameter(0, NotificationInterface::STATUS_READ);
-            $query->setMaxResults($batchSize);
+        $arr = $this->em()->createQuery(sprintf(
+            'SELECT n.id FROM %s n LEFT JOIN %s ni WITH ni.definition = n.id GROUP BY n.id HAVING COUNT(ni.id) = 0',
+            NotificationDefinition::clazz(),
+            UserNotificationInstance::clazz()
+        ))->getScalarResult();
 
-            /* @var UserNotificationInstance[] $instances */
-            $instances = $query->getResult();
-
-            foreach ($instances as $instance) {
-                $em->remove($instance);
-
-                $definitionsIds[] = $instance->getDefinition()->getId();
-            }
-            $em->flush();
-            $em->clear();
-
-            $removedCount += count($instances);
-        } while (count($instances) == $batchSize);
-
-        $definitions = [];
-        do {
-            $definitionIdsToRemove = []; // those which by now should have UserNotificationInstance associated
-            foreach ($definitionsIds as $id) {
-                $query = $em->createQuery(sprintf(
-                    'SELECT COUNT(ni.id) FROM %s ni WHERE ni.definition = ?0', UserNotificationInstance::clazz()
-                ));
-                $query->setParameter(0, $id);
-                $query->setMaxResults($batchSize);
-
-                $noAssociatedNotificationsAvailable = $query->getSingleScalarResult() == 0;
-                if ($noAssociatedNotificationsAvailable) {
-                    $definitionIdsToRemove[] = $id;
-                }
-            }
-
-            $definitions = $em->getRepository(NotificationDefinition::clazz())->findBy(array(
-                'id' => $definitionIdsToRemove,
-            ));
-
-            foreach ($definitions as $definition) {
-                $em->remove($definition);
-            }
-            $em->flush();
-            $em->clear();
-        } while (count($definitions) == $batchSize);
-
-        if ($removedCount > 0) {
-            $output->writeln(sprintf(
-                ' <info>Success!</info> In total %d notifications with status READ were removed.', $removedCount
-            ));
-        } else {
-            $output->writeln(' <comment>No notifications with status READ were found, nothing to clean up, aborting.</comment>');
+        foreach (array_chunk(array_column($arr, 'id'), 1000) as $chunk) {
+            $removedDefinitions += $this->em()->createQuery(sprintf(
+                'DELETE FROM %s n WHERE n.id IN (%s)',
+                NotificationDefinition::clazz(),
+                implode(', ', $chunk)
+            ))->execute();
         }
+
+        if (!$removed && !$removedDefinitions) {
+            $output->writeln(' <comment>Nothing to clean up, aborting.</comment>');
+        } else {
+            $output->writeln(sprintf(
+                implode(' ', array(
+                    ' <info>Success!</info>',
+                    'Removed:',
+                    '<comment>%d</comment> notification definition(s),',
+                    '<comment>%d</comment> user notification instance(s).',
+                )),
+                $removedDefinitions,
+                $removed
+            ));
+        }
+    }
+
+    /**
+     * @return EntityManager
+     */
+    protected function em()
+    {
+        return $this->getContainer()->get('doctrine')->getManager();
     }
 }

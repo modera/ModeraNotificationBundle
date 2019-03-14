@@ -13,6 +13,23 @@ use Modera\NotificationBundle\Tests\Functional\AbstractDatabaseTest;
  */
 class UserNotificationInstanceTest extends AbstractDatabaseTest
 {
+    /**
+     * @var string
+     */
+    private $dateFormat = 'YmdHis';
+
+    /**
+     * @param \DateTime $value1
+     * @param \DateTime $value2
+     */
+    private function assertDateTimeEquals(\DateTime $value1, \DateTime $value2)
+    {
+        $this->assertEquals(
+            $value1->format($this->dateFormat),
+            $value2->format($this->dateFormat)
+        );
+    }
+
     public function testDates()
     {
         $user = new User('john');
@@ -43,10 +60,10 @@ class UserNotificationInstanceTest extends AbstractDatabaseTest
         $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $instance->getId());
 
         $this->assertInstanceOf('DateTime', $instanceFromDb->getCreatedAt());
-        $this->assertEquals($createdAt, $instanceFromDb->getCreatedAt());
+        $this->assertDateTimeEquals($createdAt, $instanceFromDb->getCreatedAt());
         $this->assertInstanceOf('DateTime', $instanceFromDb->getUpdatedAt());
-        $this->assertEquals($updatedAt, $instanceFromDb->getUpdatedAt());
+        $this->assertDateTimeEquals($updatedAt, $instanceFromDb->getUpdatedAt());
         $this->assertInstanceOf('DateTime', $instanceFromDb->getReadAt());
-        $this->assertEquals($readAt, $instanceFromDb->getReadAt());
+        $this->assertDateTimeEquals($readAt, $instanceFromDb->getReadAt());
     }
 }

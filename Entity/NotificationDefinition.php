@@ -16,7 +16,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @copyright 2015 Modera Foundation
  *
  * @ORM\Entity
- * @ORM\Table(name="modera_notification_notificationdefinition")
+ * @ORM\Table(
+ *     name="modera_notification_notificationdefinition",
+ *     indexes={
+ *         @ORM\Index(name="group_name_idx", columns={"groupName"})
+ *     }
+ * )
  */
 class NotificationDefinition
 {
@@ -71,14 +76,23 @@ class NotificationDefinition
     private $createdAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lifetime;
+
+    /**
      * @param string $message
      * @param string $groupName
+     * @param \DateTime|null $lifetime
      */
-    public function __construct($message = null, $groupName = null)
+    public function __construct($message = null, $groupName = null, \DateTime $lifetime = null)
     {
         $this->message = $message;
         $this->groupName = $groupName;
 
+        $this->lifetime = $lifetime;
         $this->createdAt = new \DateTime('now');
         $this->instances = new ArrayCollection();
     }
@@ -177,5 +191,13 @@ class NotificationDefinition
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getLifetime()
+    {
+        return $this->lifetime;
     }
 }

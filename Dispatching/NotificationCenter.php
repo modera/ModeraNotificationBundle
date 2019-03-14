@@ -5,11 +5,8 @@ namespace Modera\NotificationBundle\Dispatching;
 use Doctrine\ORM\EntityManager;
 use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
-use Modera\NotificationBundle\Entity\UserNotificationInstance;
-use Modera\NotificationBundle\Model\NotificationInterface;
 use Modera\NotificationBundle\Service\NotificationService;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Service provides basic routines for manipulating notifications - dispatching(creating), querying, batch changing
@@ -91,7 +88,7 @@ class NotificationCenter extends NotificationService
             $channels = DuplicateChannelsFilterer::filter($channels, $builder->getChannels());
         }
 
-        $def = new NotificationDefinition($builder->getMessage(), $builder->getGroup());
+        $def = new NotificationDefinition($builder->getMessage(), $builder->getGroup(), $builder->getLifetime());
         $def->setMeta($builder->getMeta());
 
         foreach ($builder->getRecipients() as $user) {

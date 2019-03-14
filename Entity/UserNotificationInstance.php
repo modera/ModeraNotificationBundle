@@ -15,7 +15,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @copyright 2015 Modera Foundation
  *
  * @ORM\Entity
- * @ORM\Table(name="modera_notification_usernotificationinstance")
+ * @ORM\Table(
+ *     name="modera_notification_usernotificationinstance",
+ *     indexes={
+ *         @ORM\Index(name="status_idx", columns={"status"})
+ *     }
+ * )
  * @ORM\HasLifecycleCallbacks
  */
 class UserNotificationInstance implements NotificationInterface
@@ -31,11 +36,13 @@ class UserNotificationInstance implements NotificationInterface
      * @var NotificationDefinition
      *
      * @ORM\ManyToOne(targetEntity="NotificationDefinition", inversedBy="instances")
+     * @ORM\JoinColumn(name="definition_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $definition;
 
     /**
      * @ORM\ManyToOne(targetEntity="Symfony\Component\Security\Core\User\UserInterface")
+     * @ORM\JoinColumn(name="recipient_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $recipient;
 
@@ -63,6 +70,10 @@ class UserNotificationInstance implements NotificationInterface
      */
     private $readAt;
 
+    /**
+     * @param NotificationDefinition $definition
+     * @param UserInterface          $recipient
+     */
     public function __construct(NotificationDefinition $definition, UserInterface $recipient)
     {
         $this->definition = $definition;

@@ -5,23 +5,27 @@
     "license": "MIT",
     "require": {
         "php": ">=5.6",
-        "doctrine/orm": "~2.2,>=2.2.3",
-        "doctrine/doctrine-bundle": "~1.4",
-        "symfony/framework-bundle": "~2.3|^3.0",
-        "modera/module-bundle": "~1.0|~2.0|~3.0",
+        "doctrine/orm": "^2.4",
+        "doctrine/doctrine-bundle": "^1.4",
+        "symfony/framework-bundle": "~2.8|^3.0",
+        "modera/module-bundle": "~2.0|~3.0",
         "sergeil/expander-bundle": "^1.0"
     },
     "require-dev": {
         "phake/phake": "~2.0",
-        "phpunit/phpunit": "3.7.*",
-        "modera/foundation-bundle": "~1.0|~2.0|~3.0",
-        "sergeil/aux-bundle": "~1.0"
+        "phpunit/phpunit": "^5.5",
+        "modera/foundation-bundle": "~2.0|~3.0",
+        "sergeil/aux-bundle": "^1.0"
     },
     "authors": [
         {
             "name": "Sergei Lissovski",
             "email": "sergei.lissovski@modera.org",
             "homepage": "http://sergei.lissovski.org/"
+        },
+        {
+            "name": "Sergei Vizel",
+            "email": "sergei.vizel@modera.org"
         }
     ],
     "autoload": {
