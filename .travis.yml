@@ -14,5 +14,6 @@ php:
   - 7.2
 
 before_script:
-  - COMPOSER_MEMORY_LIMIT=-1 composer update
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then rm composer.lock; fi;
+  - COMPOSER_MEMORY_LIMIT=-1 composer install
   - mysql -e 'CREATE DATABASE modera_notificationsbundle'
