@@ -25,6 +25,12 @@ class ModeraNotificationExtension extends Extension implements PrependExtensionI
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        if (class_exists('Symfony\Component\Console\Application')) {
+            try {
+                $loader->load('console.xml');
+            } catch (\Exception $e) {}
+        }
     }
 
     /**
