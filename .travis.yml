@@ -2,10 +2,10 @@ language: php
 
 env:
   global:
-    - SYMFONY__db_host=localhost
-    - SYMFONY__db_port=3306
-    - SYMFONY__db_user=root
-    - SYMFONY__db_password=""
+    - SYMFONY__DB_HOST=localhost
+    - SYMFONY__DB_PORT=3306
+    - SYMFONY__DB_USER=root
+    - SYMFONY__DB_PASSWORD=""
 
 php:
   - 5.6

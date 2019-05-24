@@ -1,28 +1,26 @@
-imports:
-    - { resource: parameters.yml }
-
 services:
     dummy_channel_provider:
         class: Modera\NotificationBundle\Tests\Fixtures\Contributions\ChannelProvider
+        public: true
         tags:
             - { name: "modera_notification.channels_provider" }
 
 framework:
     secret:          Hell yeah!
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
-    csrf_protection: true
     session:         ~
 
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
-        charset:  UTF8
+        driver: pdo_mysql
+        host: '%env(SYMFONY__DB_HOST)%'
+        port: '%env(SYMFONY__DB_PORT)%'
+        dbname: modera_notificationsbundle
+        user: '%env(SYMFONY__DB_USER)%'
+        password: '%env(SYMFONY__DB_PASSWORD)%'
+        charset: UTF8
+        logging:  false
 
     orm:
         resolve_target_entities:

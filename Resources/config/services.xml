@@ -7,13 +7,15 @@
 
     <services>
         <service id="modera_notification.service.notification_service"
-                 class="Modera\NotificationBundle\Service\NotificationService">
+                 class="Modera\NotificationBundle\Service\NotificationService"
+                 public="true">
 
             <argument type="service" id="doctrine" />
         </service>
 
         <service id="modera_notification.dispatching.notification_center"
-                 class="Modera\NotificationBundle\Dispatching\NotificationCenter">
+                 class="Modera\NotificationBundle\Dispatching\NotificationCenter"
+                 public="true">
 
             <argument type="service" id="modera_notification.dispatching.channel_registry_provider_adapter" />
             <argument type="service" id="doctrine" />
