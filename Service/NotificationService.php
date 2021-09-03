@@ -9,7 +9,7 @@ use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Model\NotificationInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -31,7 +31,7 @@ class NotificationService
     /**
      * @param Registry $registry
      */
-    public function __construct(RegistryInterface $doctrineRegistry)
+    public function __construct(ManagerRegistry $doctrineRegistry)
     {
         $this->doctrineRegistry = $doctrineRegistry;
     }

@@ -3,7 +3,7 @@
 namespace Modera\NotificationBundle\Command;
 
 use Modera\NotificationBundle\Dispatching\NotificationCenter;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +40,7 @@ class SendNotificationCommand extends ContainerAwareCommand
     {
         /* @var NotificationCenter $center */
         $center = $this->getContainer()->get('modera_notification.dispatching.notification_center');
-        /* @var RegistryInterface $doctrine */
+        /* @var ManagerRegistry $doctrine */
         $doctrine = $this->getContainer()->get('doctrine');
         $userRepository = $doctrine->getManagerForClass(User::class)->getRepository(User::class);
 

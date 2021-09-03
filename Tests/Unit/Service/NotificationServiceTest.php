@@ -4,7 +4,7 @@ namespace Modera\NotificationBundle\Tests\Unit\Service;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Service\NotificationService;
@@ -31,7 +31,7 @@ class NotificationServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registryMock = \Phake::mock(RegistryInterface::class);
+        $this->registryMock = \Phake::mock(ManagerRegistry::class);
         $this->managerMock = \Phake::mock(EntityManager::class);
         $this->queryMock = \Phake::mock(MockQuery::class);
         $this->userMock = \Phake::mock(UserInterface::class);

@@ -3,10 +3,10 @@
 namespace Modera\NotificationBundle\Dispatching;
 
 use Doctrine\ORM\EntityManager;
-use Modera\NotificationBundle\Transport\UID;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Service\NotificationService;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Modera\NotificationBundle\Transport\UID;
 
 /**
  * Service provides basic routines for manipulating notifications - dispatching(creating), querying, batch changing
@@ -24,9 +24,9 @@ class NotificationCenter extends NotificationService
 
     /**
      * @param ChannelRegistryInterface $channelRegistry
-     * @param RegistryInterface        $doctrineRegistry
+     * @param ManagerRegistry        $doctrineRegistry
      */
-    public function __construct(ChannelRegistryInterface $channelRegistry, RegistryInterface $doctrineRegistry)
+    public function __construct(ChannelRegistryInterface $channelRegistry, ManagerRegistry $doctrineRegistry)
     {
         $this->channelRegistry = $channelRegistry;
 
