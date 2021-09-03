@@ -6,7 +6,7 @@
     "require": {
         "php": ">=5.6",
         "doctrine/orm": "^2.4",
-        "doctrine/doctrine-bundle": "^1.4",
+        "doctrine/doctrine-bundle": "^1.4|^2.0",
         "symfony/framework-bundle": "~2.8|^3.0|^4.0",
         "sergeil/expander-bundle": "^1.0"
     },
