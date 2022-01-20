@@ -94,5 +94,7 @@ class SendNotificationCommand extends ContainerAwareCommand
 
             return 1;
         }
+
+        return 0;
     }
 }

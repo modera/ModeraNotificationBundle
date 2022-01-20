@@ -81,6 +81,8 @@ class CleanUpCommand extends ContainerAwareCommand
                 $removed
             ));
         }
+
+        return 0;
     }
 
     /**
