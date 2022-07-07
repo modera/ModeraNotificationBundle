@@ -4,7 +4,6 @@ namespace Modera\NotificationBundle\Command;
 
 use Modera\NotificationBundle\Dispatching\NotificationCenter;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,7 +14,7 @@ use Modera\SecurityBundle\Entity\User;
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>
  * @copyright 2016 Modera Foundation
  */
-class SendNotificationCommand extends ContainerAwareCommand
+class SendNotificationCommand extends AbstractCommand
 {
     /**
      * {@inheritdoc}

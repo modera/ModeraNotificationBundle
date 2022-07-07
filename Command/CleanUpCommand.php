@@ -5,7 +5,6 @@ namespace Modera\NotificationBundle\Command;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 
@@ -13,7 +12,7 @@ use Modera\NotificationBundle\Entity\NotificationDefinition;
  * @author    Sergei Vizel <sergei.vizel@modera.org>
  * @copyright 2019 Modera Foundation
  */
-class CleanUpCommand extends ContainerAwareCommand
+class CleanUpCommand extends AbstractCommand
 {
     /**
      * {@inheritdoc}
