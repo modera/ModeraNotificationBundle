@@ -4,12 +4,11 @@ namespace Modera\NotificationBundle\Service;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Persistence\ManagerRegistry;
 use Modera\NotificationBundle\Transport\UID;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Model\NotificationInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -24,12 +23,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class NotificationService
 {
     /**
-     * @var Registry
+     * @var ManagerRegistry
      */
     protected $doctrineRegistry;
 
     /**
-     * @param Registry $registry
+     * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $doctrineRegistry)
     {
