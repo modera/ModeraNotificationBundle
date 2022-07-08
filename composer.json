@@ -3,18 +3,21 @@
     "type": "symfony-bundle",
     "description": "Provides functionality to store/retrieve notifications.",
     "license": "MIT",
+    "conflict": {
+        "doctrine/persistence": "<1.3"
+    },
     "require": {
-        "php": ">=5.6",
-        "doctrine/orm": "^2.4",
-        "doctrine/doctrine-bundle": "^1.4|^2.0",
-        "symfony/framework-bundle": "~2.8|^3.0|^4.0|^5.0",
-        "sergeil/expander-bundle": "^1.0"
+        "php": ">=7.1",
+        "doctrine/orm": "^2.5",
+        "doctrine/doctrine-bundle": "^2.0",
+        "symfony/framework-bundle": "^4.0|^5.0",
+        "sergeil/expander-bundle": "^1.2"
     },
     "require-dev": {
         "phake/phake": "^2.0",
         "phpunit/phpunit": "^5.5",
-        "symfony/security": "^3.0",
-        "modera/foundation-bundle": "^3.0|^4.0",
+        "symfony/security": "^4.4",
+        "modera/foundation-bundle": "^4.0",
         "sergeil/aux-bundle": "^1.0"
     },
     "authors": [
@@ -34,7 +37,7 @@
     "target-dir": "Modera/NotificationBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+            "dev-master": "2.x-dev"
         },
         "modera-module": {
             "register-bundle": "Modera\\NotificationBundle\\ModeraNotificationBundle"

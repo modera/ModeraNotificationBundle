@@ -3,7 +3,7 @@
 namespace Modera\NotificationBundle\Command;
 
 use Modera\NotificationBundle\Dispatching\NotificationCenter;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

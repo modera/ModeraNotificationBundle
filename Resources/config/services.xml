@@ -4,11 +4,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-
     <services>
         <service id="modera_notification.service.notification_service"
                  class="Modera\NotificationBundle\Service\NotificationService"
                  public="true">
+
+            <deprecated>This service is deprecated in favor to Dispatching/NotificationCenter, use it instead.</deprecated>
 
             <argument type="service" id="doctrine" />
         </service>
@@ -20,6 +21,9 @@
             <argument type="service" id="modera_notification.dispatching.channel_registry_provider_adapter" />
             <argument type="service" id="doctrine" />
         </service>
+
+        <service id="Modera\NotificationBundle\Dispatching\NotificationCenter"
+                 alias="modera_notification.dispatching.notification_center" />
 
         <service id="modera_notification.dispatching.channel_registry_provider_adapter"
                  class="Modera\NotificationBundle\Dispatching\ChannelRegistryProviderAdapter">

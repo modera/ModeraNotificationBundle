@@ -3,7 +3,7 @@
 namespace Modera\NotificationBundle\Dispatching;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
 use Modera\NotificationBundle\Service\NotificationService;
 use Modera\NotificationBundle\Transport\UID;
