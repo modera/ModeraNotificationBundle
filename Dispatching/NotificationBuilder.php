@@ -172,7 +172,7 @@ class NotificationBuilder
 
     /**
      * @param string $propertyName
-     * @param string $value
+     * @param mixed $value
      *
      * @return NotificationBuilder
      */
