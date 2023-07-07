@@ -102,7 +102,7 @@ class NotificationCenter extends NotificationService
         $em->flush();
 
         $report = new DeliveryReport($builder, UID::create($def), function (array $metaToContribute) use ($def) {
-            $def->setMeta(array_merge($def->getMeta(), $metaToContribute));
+            $def->setMeta(array_merge_recursive($def->getMeta(), $metaToContribute));
         });
 
         foreach ($channels as $channel) {
