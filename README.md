@@ -334,7 +334,7 @@ is available. For this to happen we need to create a contribution to **modera_no
             $this->container = $container;
         }
 
-        public function getItems()
+        public function getItems(): array
         {
             if (!$this->channels) {
                 $this->channels = [

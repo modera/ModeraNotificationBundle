@@ -24,7 +24,7 @@ class ChannelRegistryProviderAdapter implements ChannelRegistryInterface
     /**
      * @param ContributorInterface $contributor
      */
-    public function __construct(ContributorInterface $contributor)
+    public function __construct(/* ContributorInterface */ $contributor)
     {
         $this->contributor = $contributor;
     }

@@ -20,10 +20,7 @@ class ChannelProvider implements ContributorInterface
         $this->items = $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getItems()
+    public function getItems(): array
     {
         return array_values($this->items);
     }

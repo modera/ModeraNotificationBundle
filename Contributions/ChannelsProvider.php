@@ -30,10 +30,7 @@ class ChannelsProvider implements ContributorInterface
         $this->container = $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getItems()
+    public function getItems(): array
     {
         if (!$this->channels) {
             $this->channels = [];
