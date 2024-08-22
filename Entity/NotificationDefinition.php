@@ -64,7 +64,7 @@ class NotificationDefinition
     /**
      * Metadata that you optionally may want to associate with a notification.
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $meta = array();
 
