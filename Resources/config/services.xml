@@ -9,7 +9,7 @@
                  class="Modera\NotificationBundle\Service\NotificationService"
                  public="true">
 
-            <deprecated>The "%service_id%" service is deprecated in favor to Dispatching/NotificationCenter, use it instead.</deprecated>
+            <!--deprecated>The "%service_id%" service is deprecated in favor to Dispatching/NotificationCenter, use it instead.</deprecated-->
 
             <argument type="service" id="doctrine" />
         </service>
