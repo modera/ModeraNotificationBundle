@@ -43,7 +43,7 @@ notification service from a controller you can do something like that:
 
     public function indexAction()
     {
-        $notificationCenter = $this->get('modera_notification.dispatching.notification_center');
+        $notificationCenter = $this->container->get('modera_notification.dispatching.notification_center');
     }
 
 In a nutshell, notification center provides a high-level API which you will work with when configuring and sending
