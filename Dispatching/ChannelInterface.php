@@ -22,17 +22,14 @@ interface ChannelInterface
     /**
      * Other IDs how this channel can be identified.
      *
-     * @return string
+     * @return string[]
      */
     public function getAliases();
 
     /**
      * Must dispatch a notification through a medium that this channel is responsible for.
      *
-     * @param NotificationBuilder $builder
-     * @param DeliveryReport      $report
-     *
-     * @return string
+     * @return void
      */
     public function dispatch(NotificationBuilder $builder, DeliveryReport $report);
 }

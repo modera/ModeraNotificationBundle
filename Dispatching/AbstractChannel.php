@@ -8,9 +8,6 @@ namespace Modera\NotificationBundle\Dispatching;
  */
 abstract class AbstractChannel implements ChannelInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getAliases()
     {
         return [];

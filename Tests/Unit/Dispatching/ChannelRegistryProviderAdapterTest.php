@@ -14,7 +14,7 @@ class ChannelRegistryProviderAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetByIds()
     {
         $items = [
-            $this->createChannelMock('backend', ['backend.title', 'backend.sound', 'backend.header-box', 'backend.desktop']),
+            $this->createChannelMock('backend', ['backend.title', 'backend.sound', 'backend.info-box', 'backend.desktop']),
             $this->createChannelMock('frontend', ['popup'])
         ];
 
