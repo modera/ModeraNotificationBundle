@@ -4,6 +4,7 @@ namespace Modera\NotificationBundle\Command;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Modera\NotificationBundle\Entity\UserNotificationInstance;
 use Modera\NotificationBundle\Entity\NotificationDefinition;
@@ -14,23 +15,25 @@ use Modera\NotificationBundle\Entity\NotificationDefinition;
  */
 class CleanUpCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
             ->setName('modera:notification:clean-up')
             ->setDescription('Allows to clean up a database from notifications which not needed any more.')
+            ->addOption('only-expired', null, InputOption::VALUE_NONE)
+            ->addOption('no-lifetime-expiry-days', null, InputOption::VALUE_REQUIRED)
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $now = new \DateTime('now');
+
+        /** @var bool $onlyExpired */
+        $onlyExpired = $input->getOption('only-expired');
+
+        /** @var ?string $noLifetimeExpiryDays */
+        $noLifetimeExpiryDays = $input->getOption('no-lifetime-expiry-days') ?: null;
 
         $removed = (int) $this->em()->createQuery(sprintf(
             implode(' ', array(
@@ -47,10 +50,31 @@ class CleanUpCommand extends AbstractCommand
             NotificationDefinition::clazz()
         ))->setParameter('date', $now)->execute();
 
-        $removed += $this->em()->createQuery(sprintf(
-            'DELETE FROM %s ni WHERE ni.status = :status',
-            UserNotificationInstance::clazz()
-        ))->setParameter('status', UserNotificationInstance::STATUS_READ)->execute();
+        if (intval($noLifetimeExpiryDays) > 0) {
+            $removed += (int) $this->em()->createQuery(sprintf(
+                implode(' ', array(
+                    'SELECT COUNT(ni.id) FROM %s n',
+                    'LEFT JOIN %s ni WITH ni.definition = n.id',
+                    'WHERE n.lifetime IS NULL AND DATE_ADD(n.createdAt, %s, \'DAY\') <= :date',
+                )),
+                NotificationDefinition::clazz(),
+                UserNotificationInstance::clazz(),
+                $noLifetimeExpiryDays
+            ))->setParameter('date', $now)->getSingleScalarResult();
+
+            $removedDefinitions += $this->em()->createQuery(sprintf(
+                'DELETE FROM %s n WHERE n.lifetime IS NULL AND DATE_ADD(n.createdAt, %s, \'DAY\') <= :date',
+                NotificationDefinition::clazz(),
+                $noLifetimeExpiryDays
+            ))->setParameter('date', $now)->execute();
+        }
+
+        if (!$onlyExpired) {
+            $removed += $this->em()->createQuery(sprintf(
+                'DELETE FROM %s ni WHERE ni.status = :status',
+                UserNotificationInstance::clazz()
+            ))->setParameter('status', UserNotificationInstance::STATUS_READ)->execute();
+        }
 
         $arr = $this->em()->createQuery(sprintf(
             'SELECT n.id FROM %s n LEFT JOIN %s ni WITH ni.definition = n.id GROUP BY n.id HAVING COUNT(ni.id) = 0',
@@ -67,11 +91,11 @@ class CleanUpCommand extends AbstractCommand
         }
 
         if (!$removed && !$removedDefinitions) {
-            $output->writeln(' <comment>Nothing to clean up, aborting.</comment>');
+            $output->writeln('<comment>Nothing to clean up, aborting.</comment>');
         } else {
             $output->writeln(sprintf(
                 implode(' ', array(
-                    ' <info>Success!</info>',
+                    '<info>Success!</info>',
                     'Removed:',
                     '<comment>%d</comment> notification definition(s),',
                     '<comment>%d</comment> user notification instance(s).',
