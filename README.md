@@ -318,10 +318,10 @@ is available. For this to happen we need to create a contribution to **modera_no
 
     namespace Modera\NotificationBundle\Contributions;
 
-    use Modera\NotificationBundle\Dispatching\ChannelInterface;
-    use Sli\ExpanderBundle\Ext\ContributorInterface;
-    use Symfony\Component\DependencyInjection\ContainerInterface;
+    use Modera\ExpanderBundle\Ext\ContributorInterface;
     use Modera\NotificationBundle\Channels\MonologChannel;
+    use Modera\NotificationBundle\Dispatching\ChannelInterface;
+    use Symfony\Component\DependencyInjection\ContainerInterface;
 
     class ChannelsProvider implements ContributorInterface
     {

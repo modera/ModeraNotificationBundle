@@ -2,7 +2,7 @@
 
 namespace Modera\NotificationBundle\Tests\Fixtures\Contributions;
 
-use Sli\ExpanderBundle\Ext\ContributorInterface;
+use Modera\ExpanderBundle\Ext\ContributorInterface;
 
 /**
  * @author    Sergei Lissovski <sergei.lissovski@modera.org>

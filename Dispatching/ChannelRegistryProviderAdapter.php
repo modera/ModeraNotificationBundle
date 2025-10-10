@@ -2,7 +2,7 @@
 
 namespace Modera\NotificationBundle\Dispatching;
 
-use Sli\ExpanderBundle\Ext\ContributorInterface;
+use Modera\ExpanderBundle\Ext\ContributorInterface;
 
 /**
  * Uses extension point architecture to discover available channels.
@@ -16,15 +16,9 @@ use Sli\ExpanderBundle\Ext\ContributorInterface;
  */
 class ChannelRegistryProviderAdapter implements ChannelRegistryInterface
 {
-    /**
-     * @var ContributorInterface
-     */
-    private $contributor;
+    private ContributorInterface $contributor;
 
-    /**
-     * @param ContributorInterface $contributor
-     */
-    public function __construct(/* ContributorInterface */ $contributor)
+    public function __construct(ContributorInterface $contributor)
     {
         $this->contributor = $contributor;
     }

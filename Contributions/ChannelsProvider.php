@@ -2,8 +2,8 @@
 
 namespace Modera\NotificationBundle\Contributions;
 
+use Modera\ExpanderBundle\Ext\ContributorInterface;
 use Modera\NotificationBundle\Dispatching\ChannelInterface;
-use Sli\ExpanderBundle\Ext\ContributorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

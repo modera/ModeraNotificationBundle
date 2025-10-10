@@ -11,7 +11,6 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Modera\FoundationBundle\ModeraFoundationBundle(),
-            new Sli\AuxBundle\SliAuxBundle(),
 
             new Modera\NotificationBundle\ModeraNotificationBundle(),
         );
