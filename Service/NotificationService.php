@@ -81,7 +81,7 @@ class NotificationService
         $em = $this->doctrineRegistry->getManager();
 
         $querySegments = [
-            sprintf('SELECT inc.id, inc.readAt FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc.id, inc.readAt FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::class),
         ];
 
         $hasId = isset($arrayQuery['id']);
@@ -129,7 +129,7 @@ class NotificationService
             $query = $em->createQuery(
                 sprintf(
                     'UPDATE %s inc SET ' . join(', ', $set) . ' WHERE inc.id = :id',
-                    UserNotificationInstance::clazz()
+                    UserNotificationInstance::class
                 )
             );
             $query->setParameter('status', $newStatus);
@@ -185,7 +185,7 @@ class NotificationService
         }
 
         $query = implode(' ', [
-            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::class),
             count($whereSegments) > 0 ? 'WHERE' : '',
             implode(' AND ', $whereSegments),
             'ORDER BY inc.id',
@@ -220,7 +220,7 @@ class NotificationService
         // we fetch "definition" here to avoid issuing a separate query later if API user wants to
         // read notification's content (which happens quite often)
         $querySegments = [
-            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::clazz()),
+            sprintf('SELECT inc, def FROM %s inc LEFT JOIN inc.definition def', UserNotificationInstance::class),
         ];
         $queryParams = [];
 

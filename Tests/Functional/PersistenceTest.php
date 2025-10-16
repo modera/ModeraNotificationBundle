@@ -34,7 +34,7 @@ class PersistenceTest extends AbstractDatabaseTest
         $this->assertNotNull($instance2->getId());
 
         /* @var NotificationDefinition $definitionFromDb */
-        $definitionFromDb = self::$em->find(NotificationDefinition::clazz(), $definition->getId());
+        $definitionFromDb = self::$em->find(NotificationDefinition::class, $definition->getId());
 
         $instancesFromDb = $definitionFromDb->getInstances();
 
@@ -47,7 +47,7 @@ class PersistenceTest extends AbstractDatabaseTest
         self::$em->remove($definitionFromDb);
         self::$em->flush();
 
-        $this->assertNull(self::$em->find(UserNotificationInstance::clazz(), $instance1->getId()));
-        $this->assertNull(self::$em->find(UserNotificationInstance::clazz(), $instance2->getId()));
+        $this->assertNull(self::$em->find(UserNotificationInstance::class, $instance1->getId()));
+        $this->assertNull(self::$em->find(UserNotificationInstance::class, $instance2->getId()));
     }
 }

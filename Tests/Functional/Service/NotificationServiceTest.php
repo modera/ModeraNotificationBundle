@@ -61,15 +61,15 @@ class NotificationServiceTest extends AbstractDatabaseTest
         self::$em->clear();
 
         /* @var UserNotificationInstance $instance1FromDb*/
-        $instance1FromDb = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][0]->getId());
+        $instance1FromDb = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][0]->getId());
         $this->assertEquals($instance1FromDb->getStatus(), $newStatus);
 
         /* @var UserNotificationInstance $instance1FromDb*/
-        $instance2FromDb = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][1]->getId());
+        $instance2FromDb = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][1]->getId());
         $this->assertEquals($instance2FromDb->getStatus(), $newStatus);
 
         /* @var UserNotificationInstance $instance1FromDb*/
-        $instance3FromDb = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][2]->getId());
+        $instance3FromDb = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][2]->getId());
         $this->assertEquals($instance3FromDb->getStatus(), $fixtures['instances'][2]->getStatus()); // should not have been changed
     }
 
@@ -97,15 +97,15 @@ class NotificationServiceTest extends AbstractDatabaseTest
         ));
 
         /* @var UserNotificationInstance $instance1FromDb*/
-        $instance1FromDb = self::$em->getRepository(UserNotificationInstance::clazz())->find($instance1->getId());
+        $instance1FromDb = self::$em->getRepository(UserNotificationInstance::class)->find($instance1->getId());
         $this->assertEquals($newStatus, $instance1FromDb->getStatus());
 
         /* @var UserNotificationInstance $instance2FromDb*/
-        $instance2FromDb = self::$em->getRepository(UserNotificationInstance::clazz())->find($instance2->getId());
+        $instance2FromDb = self::$em->getRepository(UserNotificationInstance::class)->find($instance2->getId());
         $this->assertEquals($newStatus, $instance2FromDb->getStatus());
 
         // should not have been changed:
-        $instance1FromFixtures = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][0]->getId());
+        $instance1FromFixtures = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][0]->getId());
         $this->assertEquals($instance1FromFixtures->getStatus(), $fixtures['instances'][0]->getStatus());
     }
 
@@ -124,10 +124,10 @@ class NotificationServiceTest extends AbstractDatabaseTest
         self::$em->clear();
 
         /* @var UserNotificationInstance $instance1FromDb*/
-        $instance1FromDb = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][0]->getId());
+        $instance1FromDb = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][0]->getId());
         $this->assertEquals($instance1FromDb->getStatus(), $newStatus);
 
-        $instance2FromDb = self::$em->find(UserNotificationInstance::clazz(), $fixtures['instances'][1]->getId());
+        $instance2FromDb = self::$em->find(UserNotificationInstance::class, $fixtures['instances'][1]->getId());
         $this->assertEquals($instance2FromDb->getStatus(), $fixtures['instances'][1]->getStatus()); // should not have been changed
     }
 
@@ -219,7 +219,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         $service->dispatch($group, $msg, [$user1, $user2], $meta);
 
-        $instancesRepository = self::$em->getRepository(UserNotificationInstance::clazz());
+        $instancesRepository = self::$em->getRepository(UserNotificationInstance::class);
 
         /* @var UserNotificationInstance[] $user1Instances*/
         $user1Instances = $instancesRepository->findBy(array('recipient' => $user1->id));
@@ -249,7 +249,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
             'recipient' => $fixtures['users'][1],
         ));
 
-        $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
+        $this->assertInstanceOf(UserNotificationInstance::class, $notification);
     }
 
     /**
@@ -266,7 +266,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
             'recipient' => $fixtures['users'][0],
         ));
 
-        $this->assertInstanceOf(UserNotificationInstance::clazz(), $notification);
+        $this->assertInstanceOf(UserNotificationInstance::class, $notification);
     }
 
     public function testFetchOneByWithNoResults()
@@ -305,7 +305,7 @@ class NotificationServiceTest extends AbstractDatabaseTest
 
         self::$em->clear();
 
-        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $notification->getId());
+        $instanceFromDb = self::$em->find(UserNotificationInstance::class, $notification->getId());
         $this->assertEquals(12345, $instanceFromDb->getStatus());
     }
 }

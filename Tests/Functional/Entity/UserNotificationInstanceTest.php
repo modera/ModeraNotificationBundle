@@ -43,7 +43,7 @@ class UserNotificationInstanceTest extends AbstractDatabaseTest
         self::$em->clear();
 
         /* @var UserNotificationInstance $instanceFromDb*/
-        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $instance->getId());
+        $instanceFromDb = self::$em->find(UserNotificationInstance::class, $instance->getId());
 
         $this->assertInstanceOf('DateTime', $instanceFromDb->getCreatedAt());
         $this->assertNull($instanceFromDb->getUpdatedAt());
@@ -57,7 +57,7 @@ class UserNotificationInstanceTest extends AbstractDatabaseTest
         $updatedAt = $instanceFromDb->getUpdatedAt();
         $readAt = $instanceFromDb->getReadAt();
         /* @var UserNotificationInstance $instanceFromDb*/
-        $instanceFromDb = self::$em->find(UserNotificationInstance::clazz(), $instance->getId());
+        $instanceFromDb = self::$em->find(UserNotificationInstance::class, $instance->getId());
 
         $this->assertInstanceOf('DateTime', $instanceFromDb->getCreatedAt());
         $this->assertDateTimeEquals($createdAt, $instanceFromDb->getCreatedAt());

@@ -31,7 +31,7 @@ class CleanUpCommandTest extends AbstractDatabaseTest
     private function findLastNotificationByUser(User $user)
     {
         $query = $this->em()->createQuery(sprintf(
-            'SELECT e FROM %s e WHERE e.recipient = ?0 ORDER BY e.id DESC', UserNotificationInstance::clazz()
+            'SELECT e FROM %s e WHERE e.recipient = ?0 ORDER BY e.id DESC', UserNotificationInstance::class
         ));
         $query->setParameter(0, $user);
         $query->setMaxResults(1);
@@ -42,7 +42,7 @@ class CleanUpCommandTest extends AbstractDatabaseTest
     private function changeNotificationStatus($id, $newStatus)
     {
         $query = $this->em()->createQuery(sprintf(
-            'UPDATE %s e SET e.status = ?0 WHERE e.id = ?1', UserNotificationInstance::clazz()
+            'UPDATE %s e SET e.status = ?0 WHERE e.id = ?1', UserNotificationInstance::class
         ));
         $query->execute([$newStatus, $id]);
     }
@@ -79,10 +79,10 @@ class CleanUpCommandTest extends AbstractDatabaseTest
             ;
         }
 
-        $this->assertEquals(35, $this->getEntitiesCount(NotificationDefinition::clazz()));
-        $this->assertEquals(70, $this->getEntitiesCount(UserNotificationInstance::clazz()));
+        $this->assertEquals(35, $this->getEntitiesCount(NotificationDefinition::class));
+        $this->assertEquals(70, $this->getEntitiesCount(UserNotificationInstance::class));
 
-        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.status = ?0', UserNotificationInstance::clazz()));
+        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.status = ?0', UserNotificationInstance::class));
         $query->execute([NotificationInterface::STATUS_READ]);
 
         // this notification should not be deleted because it has NOT_READ status
@@ -93,8 +93,8 @@ class CleanUpCommandTest extends AbstractDatabaseTest
 
         $this->assertContains('Success', $tester->getDisplay());
         $this->assertContains('69', $tester->getDisplay());
-        $this->assertEquals(1, $this->getEntitiesCount(NotificationDefinition::clazz()));
-        $this->assertEquals(1, $this->getEntitiesCount(UserNotificationInstance::clazz()));
+        $this->assertEquals(1, $this->getEntitiesCount(NotificationDefinition::class));
+        $this->assertEquals(1, $this->getEntitiesCount(UserNotificationInstance::class));
 
         // and now marking the last single notification as read as well:
 
@@ -104,8 +104,8 @@ class CleanUpCommandTest extends AbstractDatabaseTest
 
         $this->assertContains('Success', $tester->getDisplay());
         $this->assertContains('1', $tester->getDisplay());
-        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::clazz()));
-        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::clazz()));
+        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::class));
+        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::class));
 
         // test lifetime
 
@@ -122,8 +122,8 @@ class CleanUpCommandTest extends AbstractDatabaseTest
         $this->assertContains('Success', $tester->getDisplay());
         $this->assertContains('35', $tester->getDisplay());
         $this->assertContains('70', $tester->getDisplay());
-        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::clazz()));
-        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::clazz()));
+        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::class));
+        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::class));
 
         //
 
@@ -141,7 +141,7 @@ class CleanUpCommandTest extends AbstractDatabaseTest
 
         //
 
-        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.lifetime = ?0', NotificationDefinition::clazz()));
+        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.lifetime = ?0', NotificationDefinition::class));
         $query->execute([new \DateTime('now +1 day')]);
         $tester->execute(array());
 
@@ -149,14 +149,14 @@ class CleanUpCommandTest extends AbstractDatabaseTest
 
         //
 
-        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.lifetime = ?0', NotificationDefinition::clazz()));
+        $query = $this->em()->createQuery(sprintf('UPDATE %s e SET e.lifetime = ?0', NotificationDefinition::class));
         $query->execute([new \DateTime('now -1 day')]);
         $tester->execute(array());
 
         $this->assertContains('Success', $tester->getDisplay());
         $this->assertContains('35', $tester->getDisplay());
         $this->assertContains('70', $tester->getDisplay());
-        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::clazz()));
-        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::clazz()));
+        $this->assertEquals(0, $this->getEntitiesCount(NotificationDefinition::class));
+        $this->assertEquals(0, $this->getEntitiesCount(UserNotificationInstance::class));
     }
 }

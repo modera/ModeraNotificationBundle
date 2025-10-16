@@ -24,9 +24,9 @@ abstract class AbstractDatabaseTest extends FunctionalTestCase
     public static function doSetUpBeforeClass()
     {
         self::$entities = [
-            NotificationDefinition::clazz(),
-            UserNotificationInstance::clazz(),
-            User::clazz(),
+            NotificationDefinition::class,
+            UserNotificationInstance::class,
+            User::class,
         ];
 
         foreach (self::$entities as $className) {
